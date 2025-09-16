@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  api:
+    build: . # Indica que debe construir la imagen a partir del Dockerfile en la carpeta actual
+    image: express-api # Nombre que le damos a la imagen resultante (queda registrada como "express-api")
+    container_name: express-api-container # Nombre fijo para el contenedor (no uno autogenerado)
+    ports:
+      - "4000:3000"      # Mapea el puerto 3000 dentro del contenedor al puerto 4000 de tu máquina host
+                         # => Así accedés a http://localhost:400
+    develop:
+      watch: # Define qué archivos vigilar y qué acción tomar al modificarse
+        - action: sync+restart # Acción: sincronizar los cambios y reiniciar el servicio
+          path: . # Carpeta a observar (el proyecto completo)
+          target: /app # Dónde se copia en el contenedor
+          ignore: # Archivos/carpetas que no se deben sincronizar
+            - node_modules/
+            - .git/
+            - .dockerignore
+            - docker-compose.yml
+        - action: rebuild  # Acción: reconstruir la imagen si cambia este archivo
+          path: package.json
+        - action: rebuild # Igual que arriba, si cambia package-lock.json se reconstruye
+          path: package-lock.json
