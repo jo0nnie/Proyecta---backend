@@ -1,15 +1,72 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+//db config (prisma)
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
 
 generator client {
   provider = "prisma-client-js"
   output   = "../app/generated/prisma"
 }
 
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+
+// @Guille
+// usuarios
+// emprendimientos
+// historial
+// favorito
+
+// id: int
+// nombre: string
+// apellido: string
+// email: string
+// fechaNacimiento: date
+// contraseña: string
+// fechaRegistro: date
+// estado: boolean
+model Usuarios {
+  id              Int      @id @default(autoincrement())
+  nombre          String?  @db.VarChar(255)
+  apellido        String?  @db.VarChar(255)
+  email           String   @unique(map: "email") @db.VarChar(255)
+  fechaNacimiento DateTime
+}
+
+// emprendimientos
+// id: int
+// Nombre: string
+// Descripción: string
+// Ubicación: string (descrip de donde queda?)
+// Contacto: string
+// Imagen: string (url de donde esta almacenado???)
+// redes: string (redes sociales)
+// OrdenesdePago ????????
+// boosteoActivo ???????????
+// visibilidad: int
+
+model Emprendimientos {
+  id          Int     @id @default(autoincrement())
+  nombre      String? @db.VarChar(255)
+  descripcion String? @db.VarChar(255)
+  ubicacion   String? @db.VarChar(255)
+  contacto    String? @db.VarChar(255)
+  imagen      String? @db.VarChar(255)
+  redes       String? @db.VarChar(255)
+  visibilidad Int
+}
+
+// historial
+// id: int
+// + fk_idUsuario: int
+// + fk_idEmprendmnto: int
+
+model Historiales {
+  id Int @id @default(autoincrement())
+}
+
+// favoritos
+// id: int
+
+model Favoritos {
+  id Int @id @default(autoincrement())
 }
