@@ -89,3 +89,31 @@ model Pagos {
 model MetodoPago {
   id            Int            @id  @default(autoincrement())
 }
+model Direcciones {
+  id          Int    @id @default(autoincrement())
+  calle       String
+  localidad   String
+  provincia   String
+  numero      Int
+  piso        Int
+  depto       String
+  descripcion String
+}
+
+model Imagenes {
+  id    Int    @id @default(autoincrement())
+  value String
+  logo  Boolean
+}
+
+model Ubicaciones {
+  id  Int    @id @default(autoincrement())
+  lat String
+  lng String
+}
+
+model Planes {
+  id     Int     @id @default(autoincrement())
+  nombre String
+  precio Float
+}
