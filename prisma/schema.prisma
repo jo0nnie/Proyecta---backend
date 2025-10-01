@@ -117,3 +117,23 @@ model Planes {
   nombre String
   precio Float
 }
+
+model Roles {
+  id Int @id @default(autoincrement())
+  nombre String? @db.VarChar(50)
+}
+
+model Permisos {
+  id Int @id @default(autoincrement())
+  nombre String? @db.VarChar(255)
+}
+
+model Rubros {
+  id Int @id @default(autoincrement())
+  nombre String? @db.VarChar(50)
+}
+
+model Categorias {
+  id Int @id @default(autoincrement())
+  nombre String? @db.VarChar(50)
+}
