@@ -45,6 +45,8 @@ model Emprendimientos {
   contacto        String?        @db.VarChar(255)
   imagen          String?        @db.VarChar(255)
   redes           String?        @db.VarChar(255)
+  categoria       Categorias?    @relation(fields: [categoriaId], references: [id])
+  categoriaId     Int?
   visibilidad     Int
   CarritosItems   CarritosItems? @relation(fields: [carritosItemsId], references: [id])
   carritosItemsId Int?
@@ -123,11 +125,15 @@ model Permisos {
 }
 
 model Rubros {
-  id     Int     @id @default(autoincrement())
-  nombre String? @db.VarChar(50)
+  id         Int          @id @default(autoincrement())
+  nombre     String?      @db.VarChar(50)
+  Categorias Categorias[]
 }
 
 model Categorias {
-  id     Int     @id @default(autoincrement())
-  nombre String? @db.VarChar(50)
+  id              Int               @id @default(autoincrement())
+  nombre          String?           @db.VarChar(50)
+  rubro           Rubros?           @relation(fields: [rubroId], references: [id])
+  rubroId         Int?
+  Emprendimientos Emprendimientos[]
 }
