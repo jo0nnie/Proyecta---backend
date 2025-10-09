@@ -5,7 +5,7 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "mysql"
   output   = "../app/generated/prisma"
 }
 
@@ -13,7 +13,7 @@ model Usuarios {
   id              Int       @id @default(autoincrement())
   nombre          String?   @db.VarChar(255)
   apellido        String?   @db.VarChar(255)
-  contrasena      String?   @db.VarChar(8)
+  contrasena      String?   @db.VarChar(20)
   email           String    @unique(map: "email") @db.VarChar(255)
   fechaNacimiento DateTime
   pagos           Pagos[]
