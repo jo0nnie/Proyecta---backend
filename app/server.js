@@ -7,8 +7,7 @@ const PORT = process.env.PORT || 3000;
 
 
 
-const app = express();
-app.use(express.json());
+const app = require('index.js');
 
 // app.use("/users", userRoutes);
 
