@@ -10,14 +10,15 @@ generator client {
 }
 
 model Usuarios {
-  id              Int       @id @default(autoincrement())
-  nombre          String?   @db.VarChar(255)
-  apellido        String?   @db.VarChar(255)
-  contrasena      String?   @db.VarChar(20)
-  email           String    @unique(map: "email") @db.VarChar(255)
+  id              Int               @id @default(autoincrement())
+  nombre          String?           @db.VarChar(255)
+  apellido        String?           @db.VarChar(255)
+  contrasena      String?           @db.VarChar(20)
+  email           String            @unique(map: "email") @db.VarChar(255)
   fechaNacimiento DateTime
   pagos           Pagos[]
-  carrito         Carritos? @relation(fields: [carritosId], references: [id])
+  carrito         Carritos?         @relation(fields: [carritosId], references: [id])
+  emprendimiento  Emprendimientos[]
   estado          Boolean
   carritosId      Int?
 }
@@ -48,6 +49,8 @@ model Emprendimientos {
   visibilidad     Int
   CarritosItems   CarritosItems? @relation(fields: [carritosItemsId], references: [id])
   carritosItemsId Int?
+  Usuarios        Usuarios?      @relation(fields: [usuariosId], references: [id])
+  usuariosId      Int?
 }
 
 // model Sucursales {
