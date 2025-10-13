@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();    
-import { crearEmprendimiento } from "../controllers/emprendimientoController.js";
+import { crearEmprendimiento, eliminarEmprendimiento } from "../controllers/emprendimientoController.js";
 
 
 // body post: 
@@ -11,5 +11,5 @@ import { crearEmprendimiento } from "../controllers/emprendimientoController.js"
 // }
 
 router.post("/", crearEmprendimiento);
-
+router.delete('/:id', eliminarEmprendimiento);
 export default router;

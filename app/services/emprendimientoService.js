@@ -46,3 +46,16 @@ export async function CrearEmprendimiento({ nombre, descripcion, categoriaId }, 
 
   return nuevoEmprendimiento;
 }
+
+
+// delete http://localhost:3000/emprendimientos/:id
+
+export async function EliminarEmprendimiento(id) {
+  const existe = await prisma.emprendimientos.findUnique({ where: { id } });
+  if (!existe) {
+    throw new Error('El emprendimiento no existe');
+  }
+
+  const eliminado = await prisma.emprendimientos.delete({ where: { id } });
+  return eliminado;
+}
