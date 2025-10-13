@@ -32,11 +32,17 @@ export async function CrearEmprendimiento({ nombre, descripcion, categoriaId }, 
     data: {
       nombre,
       descripcion,
-      categoriaId,
-      usuariosId: usuarioId,
-      visibilidad: 1 //aca seria la visibilidad standar para que se pueda ver el emprendimiento
+      visibilidad: 1, // visibilidad que adquieren todos los emprendimientops recien creados
+      Usuarios: {
+        connect: { id: usuarioId },
+      },
+      Categorias: {
+        connect: { id: categoriaId },
+      },
     },
   });
+
+
 
   return nuevoEmprendimiento;
 }
