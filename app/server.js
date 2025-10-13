@@ -1,13 +1,8 @@
-import express from "express";
-import userRoutes from "./routes/userRoutes.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
+import app from './index.js'
 import dotenv from 'dotenv'
 dotenv.config('../.env');
 const PORT = process.env.PORT || 3000;
-
-
-
-const app = require('index.js');
 
 // app.use("/users", userRoutes);
 

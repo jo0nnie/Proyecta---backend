@@ -5,19 +5,20 @@ datasource db {
 }
 
 generator client {
-  provider = "mysql"
+  provider = "prisma-client-js"
   output   = "../app/generated/prisma"
 }
 
 model Usuarios {
-  id              Int       @id @default(autoincrement())
-  nombre          String?   @db.VarChar(255)
-  apellido        String?   @db.VarChar(255)
-  contrasena      String?   @db.VarChar(20)
-  email           String    @unique(map: "email") @db.VarChar(255)
+  id              Int               @id @default(autoincrement())
+  nombre          String?           @db.VarChar(255)
+  apellido        String?           @db.VarChar(255)
+  contrasena      String?           @db.VarChar(20)
+  email           String            @unique(map: "email") @db.VarChar(255)
   fechaNacimiento DateTime
   pagos           Pagos[]
-  carrito         Carritos? @relation(fields: [carritosId], references: [id])
+  carrito         Carritos?         @relation(fields: [carritosId], references: [id])
+  emprendimiento  Emprendimientos[]
   estado          Boolean
   carritosId      Int?
 }
@@ -45,11 +46,13 @@ model Emprendimientos {
   contacto        String?        @db.VarChar(255)
   imagen          String?        @db.VarChar(255)
   redes           String?        @db.VarChar(255)
-  categoria       Categorias?    @relation(fields: [categoriaId], references: [id])
-  categoriaId     Int?
   visibilidad     Int
   CarritosItems   CarritosItems? @relation(fields: [carritosItemsId], references: [id])
   carritosItemsId Int?
+  Usuarios        Usuarios?      @relation(fields: [usuariosId], references: [id])
+  usuariosId      Int?
+  Categorias      Categorias?    @relation(fields: [categoriasId], references: [id])
+  categoriasId    Int?
 }
 
 // model Sucursales {
@@ -125,15 +128,12 @@ model Permisos {
 }
 
 model Rubros {
-  id         Int          @id @default(autoincrement())
-  nombre     String?      @db.VarChar(50)
-  Categorias Categorias[]
+  id     Int     @id @default(autoincrement())
+  nombre String? @db.VarChar(50)
 }
 
 model Categorias {
-  id              Int               @id @default(autoincrement())
-  nombre          String?           @db.VarChar(50)
-  rubro           Rubros?           @relation(fields: [rubroId], references: [id])
-  rubroId         Int?
-  Emprendimientos Emprendimientos[]
+  id             Int               @id @default(autoincrement())
+  nombre         String?           @db.VarChar(50)
+  emprendimiento Emprendimientos[]
 }
