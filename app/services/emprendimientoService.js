@@ -59,3 +59,31 @@ export async function EliminarEmprendimiento(id) {
   const eliminado = await prisma.emprendimientos.delete({ where: { id } });
   return eliminado;
 }
+// get todos
+
+export async function ObtenerEmprendimientos() {
+  const emprendimientos = await prisma.emprendimientos.findMany({
+    include: {
+      Categorias: true,
+      Usuarios: true,
+    },
+    orderBy: {
+      id: 'desc',
+    },
+  });
+
+  return emprendimientos;
+}
+// get:id
+
+export async function ObtenerEmprendimientoPorId(id) {
+  const emprendimiento = await prisma.emprendimientos.findUnique({
+    where: { id },
+    include: {
+      Categorias: true,
+      Usuarios: true,
+    },
+  });
+
+  return emprendimiento;
+}
