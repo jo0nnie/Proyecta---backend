@@ -5,8 +5,7 @@ datasource db {
 }
 
 generator client {
-  provider = "mysql"
-  output   = "../app/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 model Usuarios {
