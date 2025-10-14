@@ -87,3 +87,46 @@ export async function ObtenerEmprendimientoPorId(id) {
 
   return emprendimiento;
 }
+
+
+//put
+export async function ActualizarEmprendimiento(id, datos, usuarioId) {
+  const emprendimiento = await prisma.emprendimientos.findUnique({ where: { id } });
+
+  if (!emprendimiento) {
+    throw new Error('El emprendimiento no existe');
+  }
+
+  // validacion que el usuario este ligado al emprendimiento
+  if (emprendimiento.usuariosId !== usuarioId) {
+    throw new Error('No tienes permiso para editar este emprendimiento');
+  }
+
+  // si se envía una nueva categoría, validar que exista
+  if (datos.categoriaId) {
+    const categoriaExiste = await prisma.categorias.findUnique({
+      where: { id: datos.categoriaId },
+    });
+    if (!categoriaExiste) {
+      throw new Error('La categoría especificada no existe');
+    }
+  }
+
+  const actualizado = await prisma.emprendimientos.update({
+    where: { id },
+    data: {
+      nombre: datos.nombre,
+      descripcion: datos.descripcion,
+      visibilidad: datos.visibilidad,
+      ubicacion: datos.ubicacion,
+      contacto: datos.contacto,
+      imagen: datos.imagen,
+      redes: datos.redes,
+      Categorias: datos.categoriaId
+        ? { connect: { id: datos.categoriaId } }
+        : undefined,
+    },
+  });
+
+  return actualizado;
+}

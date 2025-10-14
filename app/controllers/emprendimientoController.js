@@ -1,4 +1,4 @@
-import { CrearEmprendimiento, EliminarEmprendimiento, ObtenerEmprendimientos, ObtenerEmprendimientoPorId } from '../services/emprendimientoService.js';
+import { CrearEmprendimiento, EliminarEmprendimiento, ObtenerEmprendimientos, ObtenerEmprendimientoPorId, ActualizarEmprendimiento } from '../services/emprendimientoService.js';
 
 // post: crear emprendimientos
 export const crearEmprendimiento = async (req, res) => {
@@ -62,6 +62,26 @@ export const obtenerEmprendimientoPorId = async (req, res) => {
     res.status(200).json({
       msg: 'Emprendimiento encontrado',
       emprendimiento,
+    });
+  } catch (error) {
+    res.status(400).json({ msg: error.message });
+  }
+};
+//put
+
+export const actualizarEmprendimiento = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    if (isNaN(id)) throw new Error('ID inválido');
+
+    const usuarioId = req.usuarioId || 1; // aca falta tokens
+    const datos = req.body;
+
+    const actualizado = await ActualizarEmprendimiento(id, datos, usuarioId);
+
+    res.status(200).json({
+      msg: 'Emprendimiento actualizado correctamente',
+      actualizado,
     });
   } catch (error) {
     res.status(400).json({ msg: error.message });
