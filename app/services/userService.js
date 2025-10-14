@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { SECRET } from "../constants/constants.js";
 import prisma from "../prisma.js";
 
-export const registrar = async ({
+export const RegistrarUsuario = async ({
   nombre,
   apellido,
   contrasena,
@@ -32,4 +32,29 @@ export const registrar = async ({
   });
 
   return { usuario: nuevoUsuario };
+};
+
+export const LoguearUsuario = async ({ email, contrasena }) => {
+  const usuario = await prisma.usuarios.findUnique({
+    where: { email },
+  });
+  if (!usuario) {
+    throw new Error("Usuario no Encontrado");
+  }
+
+  const isMatch = bcrypt.compare(contrasena, usuario.contrasena);
+  if (!isMatch) throw new Error("Usuario y/o Contraseña incorrectos");
+
+  const token = jwt.sign({ email: usuario.email }, SECRET, {
+    expiresIn: "1h",
+  });
+
+  return {
+    usuario: {
+      nombre: usuario.nombre,
+      apellido: usuario.apellido,
+      correo: usuario.email,
+    },
+    token,
+  };
 };
