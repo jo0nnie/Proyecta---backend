@@ -24,7 +24,7 @@ export const RegistrarUsuario = async ({
       apellido,
       contrasena: hashedContrasena,
       email,
-      fechaNacimiento: new Date("1997-05-28"),
+      fechaNacimiento: new Date(fechaNacimiento || null),
       estado: true,
     },
   });
