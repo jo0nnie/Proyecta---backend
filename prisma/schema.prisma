@@ -17,7 +17,7 @@ model Usuarios {
   email           String            @unique(map: "email") @db.VarChar(255)
   fechaNacimiento DateTime
   pagos           Pagos[]
-  carrito         Carritos?         @relation(fields: [carritosId], references: [id])
+  carrito         Carritos?
   emprendimiento  Emprendimientos[]
   estado          Boolean
   carritosId      Int?
@@ -26,7 +26,8 @@ model Usuarios {
 model Carritos {
   id              Int             @id @default(autoincrement())
   idCarritosItems CarritosItems[]
-  Usuarios        Usuarios[]
+  Usuarios        Usuarios        @relation(fields: [usuariosId], references: [id])
+  usuariosId      Int             @unique
 }
 
 model CarritosItems {
