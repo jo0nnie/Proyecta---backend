@@ -5,7 +5,7 @@ import {
     editarUnUsuario,
 } from "../services/usuarioService.js";
 
-export const listarUsuarios = async (req, res) => {
+export const ListarUsuarios = async (req, res) => {
     try {
         const usuario = await listarTodosLosUsuarios();
         res.status(200).json({
@@ -17,7 +17,7 @@ export const listarUsuarios = async (req, res) => {
     }
 }
 
-export const listarUnUsuarioPorId = async (req, res) => {
+export const ListarUsuarioPorId = async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         if (isNaN(id)) throw new Error('ID inválido');
@@ -32,7 +32,7 @@ export const listarUnUsuarioPorId = async (req, res) => {
     }
 }
 
-export const editarUsuarios = async (req, res) => {
+export const EditarUsuario = async (req, res) => {
     try {
 
         const id = parseInt(req.params.id);
@@ -51,7 +51,7 @@ export const editarUsuarios = async (req, res) => {
     }
 }
 
-export const eliminarUsuarios = async (req, res) => {
+export const EliminarUsuario = async (req, res) => {
     try {
 
         const id = parseInt(req.params.id);
