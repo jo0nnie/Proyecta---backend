@@ -7,6 +7,7 @@ import { crearEmprendimiento, eliminarEmprendimiento, obtenerEmprendimientos, ob
 // {
 //   "nombre": "Tienda Natural",
 //   "descripcion": "Productos orgánicos",
+//   "imagen": "url_de_la_imagen",
 //   "categoriaId": 1
 // }
 router.post("/", crearEmprendimiento);

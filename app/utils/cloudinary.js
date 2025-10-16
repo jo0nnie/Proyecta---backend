@@ -8,16 +8,16 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 //mi funcion para subir imagenes
-export async function uploadImage(imageInput) {
+export async function uploadImage(imagen) {
   // si es una URL valida, la sube directamente
-  if (typeof imageInput === 'string' && imageInput.startsWith('http')) {
-    return await cloudinary.uploader.upload(imageInput, {
+  if (typeof imagen === 'string' && imagen.startsWith('http')) {
+    return await cloudinary.uploader.upload(imagen, {
       folder: 'emprendimientos',
     });
   }
 
   // si es un archivo local (tempFilePath)
-  return await cloudinary.uploader.upload(imageInput, {
+  return await cloudinary.uploader.upload(imagen.tempFilePath, {
     folder: 'emprendimientos',
   });
 }
