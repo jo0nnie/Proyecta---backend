@@ -1,12 +1,15 @@
 import { CrearEmprendimiento, EliminarEmprendimiento, ObtenerEmprendimientos, ObtenerEmprendimientoPorId, ActualizarEmprendimiento } from '../services/emprendimientoService.js';
-
+import { uploadImage } from '../utils/cloudinary.js';
 // post: crear emprendimientos
 export const crearEmprendimiento = async (req, res) => {
   try {
     const usuarioId = 1; // extraído del token req.usuarioId;
-    const { nombre, descripcion, categoriaId } = req.body;
+    const { nombre, descripcion, imagen, categoriaId } = req.body;
 
-    const emprendimiento = await CrearEmprendimiento({ nombre, descripcion, categoriaId }, usuarioId);
+    const imagenSubida = await uploadImage(imagen?.tempFilePath || imagen);
+    console.log(imagenSubida);
+    const imagenUrl = imagenSubida.secure_url;
+    const emprendimiento = await CrearEmprendimiento({ nombre, descripcion, imagen: imagenUrl, categoriaId }, usuarioId);
 
     res.status(201).json({
       msg: "Emprendimiento creado correctamente",

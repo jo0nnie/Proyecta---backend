@@ -8,7 +8,7 @@ import prisma from "../prisma/client.js";
  * @param {number} data.categoriaId
  * @param {number} usuarioId - ID del usuario autenticado (extraído del token).
  */
-export async function CrearEmprendimiento({ nombre, descripcion, categoriaId }, usuarioId) {
+export async function CrearEmprendimiento({ nombre, descripcion, imagen, categoriaId }, usuarioId) {
   //validar campos
   if (!nombre || !descripcion || !categoriaId) {
     throw new Error("Faltan datos obligatorios");
@@ -33,6 +33,7 @@ export async function CrearEmprendimiento({ nombre, descripcion, categoriaId }, 
       nombre,
       descripcion,
       visibilidad: 1, // visibilidad que adquieren todos los emprendimientops recien creados
+      imagen,
       Usuarios: {
         connect: { id: usuarioId },
       },
