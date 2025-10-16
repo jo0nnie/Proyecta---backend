@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary'
+//wFgkb8lXRK1_eLH9Tjc35Ib2gSo
 import dotenv from 'dotenv'
 dotenv.config({ path: '../.env' })
 //configuracion de cloudinary
