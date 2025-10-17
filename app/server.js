@@ -1,5 +1,3 @@
-import express from "express";
-import userRoutes from "./routes/userRoutes.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import dotenv from "dotenv";
 dotenv.config({ path: "../.env" });
