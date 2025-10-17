@@ -8,7 +8,7 @@ import prisma from "../prisma/client.js";
  * @param {number} data.categoriaId
  * @param {number} usuarioId - ID del usuario autenticado (extraído del token).
  */
-export async function CrearEmprendimiento({ nombre, descripcion, imagen, categoriaId }, usuarioId) {
+export async function CrearEmprendimiento({ nombre, descripcion, imagen, categoriaId, redes }, usuarioId) {
   //validar campos
   if (!nombre || !descripcion || !categoriaId) {
     throw new Error("Faltan datos obligatorios");
@@ -39,6 +39,7 @@ export async function CrearEmprendimiento({ nombre, descripcion, imagen, categor
       },
       Categorias: {
         connect: { id: categoriaId },
+      redes
       },
     },
   });
@@ -92,18 +93,18 @@ export async function ObtenerEmprendimientoPorId(id) {
 
 //put
 export async function ActualizarEmprendimiento(id, datos, usuarioId) {
-  const emprendimiento = await prisma.emprendimientos.findUnique({ where: { id } });
+  const emprendimiento = await prisma.emprendimientos.findUnique({
+    where: { id },
+  });
 
   if (!emprendimiento) {
     throw new Error('El emprendimiento no existe');
   }
 
-  // validacion que el usuario este ligado al emprendimiento
   if (emprendimiento.usuariosId !== usuarioId) {
     throw new Error('No tienes permiso para editar este emprendimiento');
   }
 
-  // si se envía una nueva categoría, validar que exista
   if (datos.categoriaId) {
     const categoriaExiste = await prisma.categorias.findUnique({
       where: { id: datos.categoriaId },
@@ -113,20 +114,25 @@ export async function ActualizarEmprendimiento(id, datos, usuarioId) {
     }
   }
 
+  const dataActualizada = {};
+
+  if (datos.nombre) dataActualizada.nombre = datos.nombre;
+  if (datos.descripcion) dataActualizada.descripcion = datos.descripcion;
+  if (datos.visibilidad !== undefined) dataActualizada.visibilidad = datos.visibilidad;
+  if (datos.ubicacion) dataActualizada.ubicacion = datos.ubicacion;
+  if (datos.contacto) dataActualizada.contacto = datos.contacto;
+  if (datos.imagen) dataActualizada.imagen = datos.imagen;
+  if (datos.redes) dataActualizada.redes = datos.redes;
+
+  if (datos.categoriaId) {
+    dataActualizada.Categorias = {
+      connect: { id: datos.categoriaId },
+    };
+  }
+
   const actualizado = await prisma.emprendimientos.update({
     where: { id },
-    data: {
-      nombre: datos.nombre,
-      descripcion: datos.descripcion,
-      visibilidad: datos.visibilidad,
-      ubicacion: datos.ubicacion,
-      contacto: datos.contacto,
-      imagen: datos.imagen,
-      redes: datos.redes,
-      Categorias: datos.categoriaId
-        ? { connect: { id: datos.categoriaId } }
-        : undefined,
-    },
+    data: dataActualizada,
   });
 
   return actualizado;
