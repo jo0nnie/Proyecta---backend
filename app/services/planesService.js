@@ -33,3 +33,43 @@ export const ObtenerPlanes = async () => {
         throw new Error("Error al obtener los planes");
     }
 };
+export const ObtenerPlanPorId = async (id) => {
+    try {
+        const plan = await prisma.planes.findUnique({
+            where: { id }
+        });
+        return plan;
+    } catch (error) {
+        throw new Error("Error al obtener el plan por ID");
+    }
+};
+// eliminar service
+export const EliminarPlan = async (id) => {
+    try {
+        const eliminado = await prisma.planes.delete({
+            where: { id }
+        });
+        return eliminado;
+    } catch (error) {
+        throw new Error("Error al eliminar el plan");
+    }
+};
+
+// actualizar service
+export const ActualizarPlan = async (id, datos) => {
+    try {   
+        const actualizado = await prisma.planes.update({
+            where: { id },
+            data: {
+                nombre: datos.nombre,
+                descripcion: Array.isArray(datos.descripcion) ? datos.descripcion.join('; ') : datos.descripcion,
+                duracion: datos.duracion,
+                precio: parseFloat(datos.precio)
+            } 
+        });
+        return actualizado;
+    } catch (error) {
+        throw new Error("Error al actualizar el plan");         
+
+    }
+};

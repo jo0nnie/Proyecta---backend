@@ -1,7 +1,7 @@
 import express from 'express';
 
 const router = express.Router();
-import { crearPlanes, obtenerPlanes } from '../controllers/planesController.js';
+import { crearPlanes, obtenerPlanes, obtenerPlanPorId, eliminarPlan, actualizarPlan } from '../controllers/planesController.js';
 
 // body post:
 // {
@@ -18,5 +18,8 @@ import { crearPlanes, obtenerPlanes } from '../controllers/planesController.js';
 router.post('/', crearPlanes);
 // get todos los planes
 router.get('/', obtenerPlanes);
+router.get('/:id', obtenerPlanPorId);
+router.delete('/:id', eliminarPlan);
+router.put('/:id', actualizarPlan);
 export default router;
 
