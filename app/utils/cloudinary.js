@@ -1,23 +1,21 @@
-import { v2 as cloudinary } from 'cloudinary'
-import dotenv from 'dotenv'
-dotenv.config({ path: '../.env' })
-//configuracion de cloudinary
+import { v2 as cloudinary } from 'cloudinary';
+import dotenv from 'dotenv';
+dotenv.config({ path: '../.env' });
+
+// Configuración de Cloudinary
 cloudinary.config({ 
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
   api_key: process.env.CLOUDINARY_API_KEY, 
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
-//mi funcion para subir imagenes
-export async function uploadImage(imagen) {
-  // si es una URL valida, la sube directamente
-  if (typeof imagen === 'string' && imagen.startsWith('http')) {
-    return await cloudinary.uploader.upload(imagen, {
-      folder: 'emprendimientos',
-    });
+
+// Función para subir imágenes
+export async function uploadImage(ruta) {
+  if (typeof ruta === 'string' && ruta.startsWith('http')) {
+    // es una URL
+    return await cloudinary.uploader.upload(ruta, { folder: 'emprendimientos' });
   }
 
-  // si es un archivo local (tempFilePath)
-  return await cloudinary.uploader.upload(imagen.tempFilePath, {
-    folder: 'emprendimientos',
-  });
+  // es un archivo local
+  return await cloudinary.uploader.upload(ruta, { folder: 'emprendimientos' });
 }

@@ -1,21 +1,39 @@
 import { CrearEmprendimiento, EliminarEmprendimiento, ObtenerEmprendimientos, ObtenerEmprendimientoPorId, ActualizarEmprendimiento } from '../services/emprendimientoService.js';
 import { uploadImage } from '../utils/cloudinary.js';
+
 // post: crear emprendimientos
 export const crearEmprendimiento = async (req, res) => {
   try {
-    const usuarioId = 1; // extraído del token req.usuarioId;
-    const { nombre, descripcion, imagen, categoriaId } = req.body;
+    const usuarioId = 1;
+    const { nombre, descripcion, categoriaId } = req.body;
+    // convertir en int
+    const categoriaIdInt = parseInt(categoriaId);
+    if (isNaN(categoriaIdInt)) {
+      return res.status(400).json({ msg: "ID de categoría inválido" });
+    }
+    const imagen = req.files?.imagen;
+    console.log("req.body:", req.body);
+    console.log("req.files:", req.files);
+    console.log("imagen.tempFilePath:", req.files?.imagen?.tempFilePath);
+    if (!imagen) {
+      return res.status(400).json({ msg: "Debe subir una imagen" });
+    }
 
-    const imagenSubida = await uploadImage(imagen?.tempFilePath || imagen);
-    console.log(imagenSubida);
+    // subir la imagen a cloudinary desde el archivo temporal
+    const imagenSubida = await uploadImage(imagen.tempFilePath);
     const imagenUrl = imagenSubida.secure_url;
-    const emprendimiento = await CrearEmprendimiento({ nombre, descripcion, imagen: imagenUrl, categoriaId }, usuarioId);
+    console.log("Imagen subida a Cloudinary:", imagenUrl);
+    const emprendimiento = await CrearEmprendimiento(
+      { nombre, descripcion, imagen: imagenUrl, categoriaId: categoriaIdInt },
+      usuarioId
+    );
 
     res.status(201).json({
       msg: "Emprendimiento creado correctamente",
       emprendimiento,
     });
   } catch (error) {
+    console.error(error);
     res.status(400).json({ msg: error.message });
   }
 };
