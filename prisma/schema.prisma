@@ -1,0 +1,153 @@
+//db config (prisma)
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+model Usuarios {
+  id              Int               @id @default(autoincrement())
+  nombre          String?           @db.VarChar(255)
+  apellido        String?           @db.VarChar(255)
+  contrasena      String?           @db.VarChar(20)
+  email           String            @unique(map: "email") @db.VarChar(255)
+  fechaNacimiento DateTime
+  pagos           Pagos[]
+  carrito         Carritos?
+  historial       Historiales?      
+  favoritos       Favoritos?
+  emprendimiento  Emprendimientos[]
+  estado          Boolean
+}
+
+model Carritos {
+  id              Int             @id @default(autoincrement())
+  idCarritosItems CarritosItems[]
+  Usuarios        Usuarios        @relation(fields: [usuariosId], references: [id])
+  usuariosId      Int             @unique
+  pago            Pagos[]
+}
+
+model CarritosItems {
+  id              Int               @id @default(autoincrement())
+  emprendimientos Emprendimientos[]
+  Carritos        Carritos         @relation(fields: [carritosId], references: [id])
+  carritosId      Int
+  planes          Planes            @relation(fields: [planesId], references: [id])
+  planesId        Int
+}
+
+model Emprendimientos {
+  id              Int            @id @default(autoincrement())
+  nombre          String?        @db.VarChar(255)
+  descripcion     String?        @db.VarChar(255)
+  ubicacion       String?        @db.VarChar(255)
+  contacto        String?        @db.VarChar(255)
+  imagen          String?        @db.VarChar(255)
+  redes           String?        @db.VarChar(255)
+  visibilidad     Int
+  historiales     Historiales[]
+  favoritos       Favoritos[]
+  CarritosItems   CarritosItems? @relation(fields: [carritosItemsId], references: [id])
+  carritosItemsId Int?
+  Usuarios        Usuarios      @relation(fields: [usuariosId], references: [id])
+  usuariosId      Int
+  Categorias      Categorias?    @relation(fields: [categoriasId], references: [id])
+  categoriasId    Int?
+}
+
+// model Sucursales {
+//   id                Int              @id @default(autoincrement())
+//   Emprendimientos   Emprendimientos? @relation(fields: [emprendimientosId], references: [id])
+//   emprendimientosId Int?
+// }
+
+model Historiales {
+  id Int @id @default(autoincrement())
+  usuario  Usuarios  @relation(fields: [usuarioId], references: [id])
+  usuarioId Int    @unique
+  emprendimientos  Emprendimientos[]
+}
+
+model Favoritos {
+  id Int @id @default(autoincrement())
+  usuario  Usuarios  @relation(fields: [usuarioId], references: [id])
+  usuarioId  Int       @unique
+  emprendimientos  Emprendimientos[]
+}
+
+model Planes {
+  id          Int      @id @default(autoincrement())
+  nombre      String
+  descripcion String
+  fechaInicio DateTime
+  fechaFinal  DateTime
+  precio      Float
+  carritosItems CarritosItems[]
+}
+
+model Pagos {
+  id        Int      @id @default(autoincrement())
+  usuario   Usuarios @relation(fields: [usuarioId], references: [id])
+  usuarioId Int
+  carrito   Carritos @relation(fields: [carritoId], references: [id])
+  carritoId Int      
+  fecha     DateTime  @default(now())
+  monto     Float
+}
+
+model MetodoPago {
+  id Int @id @default(autoincrement())
+  nombre String
+}
+
+model Direcciones {
+  id          Int    @id @default(autoincrement())
+  calle       String
+  localidad   String
+  provincia   String
+  numero      Int
+  piso        Int
+  depto       String
+  descripcion String
+}
+
+model Imagenes {
+  id    Int     @id @default(autoincrement())
+  value String
+  logo  Boolean
+}
+
+model Ubicaciones {
+  id  Int    @id @default(autoincrement())
+  lat String
+  lng String
+}
+
+model Roles {
+  id     Int     @id @default(autoincrement())
+  nombre String? @db.VarChar(50)
+}
+
+model Permisos {
+  id     Int     @id @default(autoincrement())
+  nombre String? @db.VarChar(255)
+}
+
+model Rubros {
+  id     Int     @id @default(autoincrement())
+  nombre String? @db.VarChar(50)
+  categoria    Categorias  @relation(fields: [categoriaId], references: [id])
+  categoriaId  Int         
+}
+
+model Categorias {
+  id             Int               @id @default(autoincrement())
+  nombre         String?           @db.VarChar(50)
+  emprendimiento Emprendimientos[]
+  rubros         Rubros[]
+}
