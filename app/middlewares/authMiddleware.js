@@ -18,3 +18,4 @@ export const authMiddleware = (req, res, next) => {
     return res.status(403).json({ error: "Token no válido o expirado" });
   }
 };
+

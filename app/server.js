@@ -4,6 +4,8 @@ import dotenv from 'dotenv'
 dotenv.config('../.env');
 const PORT = process.env.PORT || 3000;
 
+// middleware para subir archivos
+
 // app.use("/users", userRoutes);
 
 app.use(errorHandler);
