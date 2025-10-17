@@ -111,9 +111,12 @@ model Ubicaciones {
   lng String
 }
 
+// descripcion???
 model Planes {
   id            Int             @id @default(autoincrement())
   nombre        String
+  descripcion   String
+  duracion      String
   precio        Float
   CarritosItems CarritosItems[]
 }
