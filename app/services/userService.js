@@ -1,56 +1,33 @@
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { SECRET } from "../constants/constants.js";
+import prisma from "../prisma.js";
 
-const users = [];
-
-export const registrar = async ({ name, username, password }) => {
-  const usuarioExistente = users.find((user) => user.username === username);
-  if (usuarioExistente) throw new Error("El usuario ya existe");
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const newUser = { id: username, username, name, password: hashedPassword };
-  users.push(newUser);
-
-  const newUserResponse = { username: newUser.username, name: newUser.name };
-
-  return newUserResponse;
-};
-
-export const login = async ({ username, password }) => {
-  const user = users.find((u) => u.username === username);
-  if (!user) throw new Error("Usuario no encontrado");
-
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) throw new Error("Usuario y/o Contraseña incorrectos");
-
-  const token = jwt.sign({ username: user.username }, SECRET, {
-    expiresIn: "1h",
+export const RegistrarUsuario = async ({
+  nombre,
+  apellido,
+  contrasena,
+  email,
+  fechaNacimiento,
+}) => {
+  const emailExistente = await prisma.usuarios.findUnique({
+    where: { email },
   });
 
-  return { user: { username: user.username }, token };
-};
+  if (emailExistente) {
+    throw new Error("El correo ya esta asociado a otra cuenta");
+  }
 
-export const listar = () => {
-  return users.map((usuario) => ({
-    id: usuario.id,
-    name: usuario.name,
-    username: usuario.username,
-  }));
-};
+  const hashedContrasena = await bcrypt.hash(contrasena, 10);
 
-export const buscarUsuarioPorId = (usuarioId) => {
-  const usuario = users.find((user) => user.id === usuarioId);
+  const nuevoUsuario = await prisma.usuarios.create({
+    data: {
+      nombre,
+      apellido,
+      contrasena: hashedContrasena,
+      email,
+      fechaNacimiento: new Date(fechaNacimiento || null),
+      estado: true,
+    },
+  });
 
-  const usuarioResponse = {
-    name: usuario.name,
-    username: usuario.username,
-  };
-
-  return usuarioResponse;
-};
-
-export const vaciarListaUsuarios = () => {
-  users = [];
+  return { usuario: nuevoUsuario };
 };
