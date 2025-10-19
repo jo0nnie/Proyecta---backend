@@ -1,45 +1,19 @@
-import {
-  buscarUsuarioPorId,
-  listar,
-  login,
-  registrar,
-  vaciarListaUsuarios,
-} from "../services/userService.js";
+import { LoguearUsuario, RegistrarUsuario } from "../services/userService.js";
 
-export const registrarUsuario = async (req, res) => {
+export const registrarUsuario = async (req, res, next) => {
   try {
-    const user = await registrar(req.body);
-    res.status(201).json({ msg: "Usuario registrado correctamente", user });
-  } catch (error) {
-    res.status(400).json({ msg: error.message });
+    const usuario = await RegistrarUsuario(req.body);
+    res.status(201).json(usuario);
+  } catch (err) {
+    next(err);
   }
 };
 
-export const loguearUsuario = async (req, res) => {
+export const loguearUsuario = async (req, res, next) => {
   try {
-    const { user, token } = await login(req.body);
-    res.json({ token, user });
-  } catch (error) {
-    res.status(400).json({ msg: error.message });
+    const { usuario, token } = await LoguearUsuario(req.body);
+    res.status(201).json({ usuario, token });
+  } catch (err) {
+    next(err);
   }
-};
-
-export const listarUsuarios = (req, res) => {
-  const listaDeUsuarios = listar();
-
-  res.json(listaDeUsuarios);
-};
-
-export const usuarioPorId = (req, res) => {
-  const userId = req.params.id;
-  const usuario = buscarUsuarioPorId(userId);
-  if (!usuario) {
-    return res.status(404).json({ error: "Usuario no encontrado" });
-  }
-
-  res.json(usuario);
-};
-
-export const vaciarUsuarios = (req, res) => {
-  vaciarListaUsuarios()
 };

@@ -3,7 +3,7 @@ CREATE TABLE `Usuarios` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `nombre` VARCHAR(255) NULL,
     `apellido` VARCHAR(255) NULL,
-    `contrasena` VARCHAR(8) NULL,
+    `contrasena` VARCHAR(20) NULL,
     `email` VARCHAR(255) NOT NULL,
     `fechaNacimiento` DATETIME(3) NOT NULL,
     `estado` BOOLEAN NOT NULL,
@@ -40,6 +40,7 @@ CREATE TABLE `Emprendimientos` (
     `redes` VARCHAR(255) NULL,
     `visibilidad` INTEGER NOT NULL,
     `carritosItemsId` INTEGER NULL,
+    `usuariosId` INTEGER NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -168,6 +169,9 @@ ALTER TABLE `CarritosItems` ADD CONSTRAINT `CarritosItems_carritosId_fkey` FOREI
 
 -- AddForeignKey
 ALTER TABLE `Emprendimientos` ADD CONSTRAINT `Emprendimientos_carritosItemsId_fkey` FOREIGN KEY (`carritosItemsId`) REFERENCES `CarritosItems`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Emprendimientos` ADD CONSTRAINT `Emprendimientos_usuariosId_fkey` FOREIGN KEY (`usuariosId`) REFERENCES `Usuarios`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Pagos` ADD CONSTRAINT `Pagos_usuarioId_fkey` FOREIGN KEY (`usuarioId`) REFERENCES `Usuarios`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
