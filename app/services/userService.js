@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { SECRET } from "../constants/constants.js";
-import prisma from "../prisma.js";
+import prisma from "../prisma/client.js";
 
 export const RegistrarUsuario = async ({
   nombre,
