@@ -11,7 +11,7 @@ import { authMiddleware } from "../middlewares/authMiddleware.js";
 //   "imagen": "url_de_la_imagen",
 //   "categoriaId": 1
 // }
-router.post("/", authMiddleware, crearEmprendimiento);
+router.post("/",authMiddleware, crearEmprendimiento);
 // delete
 router.delete('/:id', eliminarEmprendimiento);
 // get

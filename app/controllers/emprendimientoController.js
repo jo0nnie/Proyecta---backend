@@ -1,15 +1,22 @@
-import { CrearEmprendimiento, EliminarEmprendimiento, ObtenerEmprendimientos, ObtenerEmprendimientoPorId, ActualizarEmprendimiento } from '../services/emprendimientoService.js';
-import { uploadImage } from '../utils/cloudinary.js';
+import {
+  CrearEmprendimiento,
+  EliminarEmprendimiento,
+  ObtenerEmprendimientos,
+  ObtenerEmprendimientoPorId,
+  ActualizarEmprendimiento,
+} from "../services/emprendimientoService.js";
+import { uploadImage } from "../utils/cloudinary.js";
 
 // post: crear emprendimientos
 export const crearEmprendimiento = async (req, res) => {
+  
   try {
-//     const usuarioId = req.usuarioId;
-// if (!usuarioId) {
-//   return res.status(401).json({ msg: "Usuario no autenticado" });
-// } con token 
+    const usuarioId = req.usuarioId;
+    if (!usuarioId) {
+      return res.status(401).json({ msg: "Usuario no autenticado" });
+    }
 
-    const usuarioId = 1;
+    // const usuarioId = 1;
     const { nombre, descripcion, categoriaId, redes } = req.body;
     // convertir en int
     const categoriaIdInt = parseInt(categoriaId);
@@ -29,7 +36,13 @@ export const crearEmprendimiento = async (req, res) => {
     const imagenUrl = imagenSubida.secure_url;
     console.log("Imagen subida a Cloudinary:", imagenUrl);
     const emprendimiento = await CrearEmprendimiento(
-      { nombre, descripcion, imagen: imagenUrl, categoriaId: categoriaIdInt, redes },
+      {
+        nombre,
+        descripcion,
+        imagen: imagenUrl,
+        categoriaId: categoriaIdInt,
+        redes,
+      },
       usuarioId
     );
 
@@ -46,12 +59,12 @@ export const crearEmprendimiento = async (req, res) => {
 export const eliminarEmprendimiento = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    if (isNaN(id)) throw new Error('ID inválido');
+    if (isNaN(id)) throw new Error("ID inválido");
 
     const eliminado = await EliminarEmprendimiento(id);
 
     res.status(200).json({
-      msg: 'Emprendimiento eliminado correctamente',
+      msg: "Emprendimiento eliminado correctamente",
       eliminado,
     });
   } catch (error) {
@@ -65,7 +78,7 @@ export const obtenerEmprendimientos = async (req, res) => {
     const emprendimientos = await ObtenerEmprendimientos();
 
     res.status(200).json({
-      msg: 'Lista de emprendimientos',
+      msg: "Lista de emprendimientos",
       emprendimientos,
     });
   } catch (error) {
@@ -77,16 +90,16 @@ export const obtenerEmprendimientos = async (req, res) => {
 export const obtenerEmprendimientoPorId = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    if (isNaN(id)) throw new Error('ID inválido');
+    if (isNaN(id)) throw new Error("ID inválido");
 
     const emprendimiento = await ObtenerEmprendimientoPorId(id);
 
     if (!emprendimiento) {
-      return res.status(404).json({ msg: 'Emprendimiento no encontrado' });
+      return res.status(404).json({ msg: "Emprendimiento no encontrado" });
     }
 
     res.status(200).json({
-      msg: 'Emprendimiento encontrado',
+      msg: "Emprendimiento encontrado",
       emprendimiento,
     });
   } catch (error) {
@@ -100,13 +113,13 @@ export const actualizarEmprendimiento = async (req, res) => {
     // Validar ID del emprendimiento
     const id = parseInt(req.params.id);
     if (isNaN(id)) {
-      return res.status(400).json({ msg: 'ID inválido' });
+      return res.status(400).json({ msg: "ID inválido" });
     }
 
     // Extraer usuario autenticado desde el token (asumiendo que el middleware lo inyecta en req.usuario)
     const usuarioId = req.usuario?.id;
     if (!usuarioId) {
-      return res.status(401).json({ msg: 'Usuario no autenticado' });
+      return res.status(401).json({ msg: "Usuario no autenticado" });
     }
 
     // Extraer datos del body
@@ -116,7 +129,7 @@ export const actualizarEmprendimiento = async (req, res) => {
     const actualizado = await ActualizarEmprendimiento(id, datos, usuarioId);
 
     return res.status(200).json({
-      msg: 'Emprendimiento actualizado correctamente',
+      msg: "Emprendimiento actualizado correctamente",
       actualizado,
     });
   } catch (error) {

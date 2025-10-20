@@ -5,7 +5,7 @@ import {
     registrarUsuario,
     loguearUsuario
 } from '../controllers/userController.js'
-import { authMiddleware } from '../middlewares/authMiddleware.js'
+// import { authMiddleware } from '../middlewares/authMiddleware.js'
 
 const router = express.Router();
 //body post:
