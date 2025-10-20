@@ -1,11 +1,13 @@
-import { errorHandler } from "./middlewares/errorHandler.js";
+import express from "express";
 import dotenv from "dotenv";
+import { errorHandler } from "./middlewares/errorHandler.js";
 import app from "./index.js";
 dotenv.config({ path: "../.env" });
+
 const PORT = process.env.PORT || 3000;
 
-// middleware para subir archivos
+app.use(express.json());
 
 app.use(errorHandler);
 
-app.listen(PORT, () => console.log(`Servidor en http://localhost:${[PORT]}]`));
+app.listen(PORT, () => console.log(`Servidor en http://localhost:${[PORT]}`));
