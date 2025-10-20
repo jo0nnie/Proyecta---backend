@@ -3,7 +3,7 @@ import prisma from "../app/prisma/client.js";
 async function main() {
   const nuevaCategoria = await prisma.categorias.create({
     data: {
-      nombre: 'Tecnología',
+      nombre: 'Gastronomía',
     },
   });
 
