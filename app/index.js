@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import fileUpload from "express-fileupload";
 import emprendimientosRoutes from "./routes/emprendimientosRoutes.js";
 import usuariosRoutes from "./routes/usuarioRoutes.js";
 const app = express();
@@ -8,6 +9,12 @@ app.use(
     origin: "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
+  })
+);
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
   })
 );
 
