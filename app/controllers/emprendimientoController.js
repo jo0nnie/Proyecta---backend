@@ -4,7 +4,7 @@ import { uploadImage } from '../utils/cloudinary.js';
 // post: crear emprendimientos
 export const crearEmprendimiento = async (req, res) => {
   try {
-//     const usuarioId = req.usuario?.id;
+//     const usuarioId = req.usuarioId;
 // if (!usuarioId) {
 //   return res.status(401).json({ msg: "Usuario no autenticado" });
 // } con token 

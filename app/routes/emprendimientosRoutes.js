@@ -1,6 +1,7 @@
 import express from "express";
 const router = express.Router();    
 import { crearEmprendimiento, eliminarEmprendimiento, obtenerEmprendimientos, obtenerEmprendimientoPorId, actualizarEmprendimiento } from "../controllers/emprendimientoController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 
 // body post: 
@@ -10,7 +11,7 @@ import { crearEmprendimiento, eliminarEmprendimiento, obtenerEmprendimientos, ob
 //   "imagen": "url_de_la_imagen",
 //   "categoriaId": 1
 // }
-router.post("/", crearEmprendimiento);
+router.post("/", authMiddleware, crearEmprendimiento);
 // delete
 router.delete('/:id', eliminarEmprendimiento);
 // get
