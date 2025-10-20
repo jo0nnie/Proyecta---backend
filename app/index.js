@@ -2,7 +2,7 @@ import express from "express";
 import emprendimientosRoutes from "./routes/emprendimientosRoutes.js"; 
 import fileUpload from "express-fileupload";
 import cors from "cors";  
-//import usuariosRoutes from "./routes/usuarioRoutes.js"
+import usuariosRoutes from "./routes/usuarioRoutes.js"
 
 const app = express();
 
