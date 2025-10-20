@@ -21,7 +21,7 @@ router.delete('/:id', EliminarUsuario);
 // put editar usuario
 router.put('/:id', EditarUsuario);
 //registrar
-router.post('/register', registrarUsuario);
+router.post('/registro', registrarUsuario);
 //loguear
 router.post('/login', loguearUsuario);
 // router.use(authMiddleware)
