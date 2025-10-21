@@ -3,6 +3,7 @@ import cors from "cors";
 import fileUpload from "express-fileupload";
 import emprendimientosRoutes from "./routes/emprendimientosRoutes.js";
 import usuariosRoutes from "./routes/usuarioRoutes.js";
+import planesRoutes from "./routes/planesRoutes.js";
 const app = express();
 app.use(
   cors({
@@ -23,5 +24,6 @@ app.use(express.json());
 app.use("/emprendimientos", emprendimientosRoutes);
 //rutas de usuarios
 app.use("/usuarios", usuariosRoutes);
-
+//rutas de planes
+app.use("/planes", planesRoutes);
 export default app;
