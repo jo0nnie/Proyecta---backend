@@ -22,11 +22,8 @@ export const ListarUsuarioPorId = async (req, res) => {
         const id = parseInt(req.params.id);
         if (isNaN(id)) throw new Error('ID inválido');
 
-        const usuario = await listarUsuarioPorId(id)
-        res.status(200).json({
-            msg: 'Usuario',
-            usuario,
-        });
+        const usuario = await listarUsuarioPorId(id);
+        res.status(200).json({ msg: 'Usuario', usuario });
     } catch (error) {
         res.status(400).json({ msg: error.message });
     }
