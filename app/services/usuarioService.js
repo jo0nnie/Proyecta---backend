@@ -74,15 +74,25 @@ export const listarTodosLosUsuarios = async () => {
 }
 
 export const listarUsuarioPorId = async (id) => {
-
-    const usuario = await prisma.usuarios.findUnique({
-        where: { id },
+  const usuario = await prisma.usuarios.findUnique({
+    where: { id },
+    include: {
+      emprendimiento: {
         include: {
-            emprendimiento: true,
-        },
-    });
-    if (!usuario) {
-        throw new Error("No se encontro el Usuario");
+          Categorias: {
+            select: {
+              id: true,
+              nombre: true
+            }
+          }
+        }
+      }
     }
-    return usuario;
-}
+  });
+
+  if (!usuario) {
+    throw new Error("No se encontró el Usuario");
+  }
+
+  return usuario;
+};
