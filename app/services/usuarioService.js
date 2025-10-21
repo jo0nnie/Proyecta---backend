@@ -1,26 +1,47 @@
 import prisma from "../prisma/client.js";
+import bcrypt from "bcryptjs";
 
 export const editarUnUsuario = async (id, datos) => {
-
     const encontrarUsuario = await prisma.usuarios.findUnique({
-        where: { id }
+        where: { id },
     });
     if (!encontrarUsuario) {
-        throw new Error("No se encontro el Usuario");
+        throw new Error("No se encontró el Usuario");
     }
 
     const { nombre, apellido, email, contrasena, fechaNacimiento } = datos;
 
+    if (email) {
+        const usuarioConEseEmail = await prisma.usuarios.findUnique({
+            where: { email },
+        });
+        if (usuarioConEseEmail && usuarioConEseEmail.id !== id) {
+            throw new Error("Este correo ya está en uso.");
+        }
+    }
+
+    const dataToUpdate = {
+        nombre,
+        apellido,
+        email,
+        fechaNacimiento,
+    };
+
+    if (contrasena !== undefined && contrasena !== null && contrasena.trim() !== "") {
+        const esIgual = bcrypt.compareSync(contrasena, encontrarUsuario.contrasena);
+        if (esIgual) {
+            throw new Error("La nueva contraseña debe ser diferente a la actual.");
+        }
+
+        const hashedContrasena = await bcrypt.hash(contrasena, 10);
+        dataToUpdate.contrasena = hashedContrasena;
+    }
+
     const editarElUsuario = await prisma.usuarios.update({
         where: { id },
-        data: {
-            nombre,
-            apellido,
-            contrasena,
-            email,
-            fechaNacimiento,
-        }
+        data: dataToUpdate,
     });
+
     return editarElUsuario;
 };
 
@@ -53,19 +74,25 @@ export const listarTodosLosUsuarios = async () => {
 }
 
 export const listarUsuarioPorId = async (id) => {
-
-    const encontrarUsuario = await prisma.usuarios.findUnique({
-        where: { id },
-        select: {
-            nombre: true,
-            apellido: true,
-            contrasena: true,
-            email: true,
-            emprendimiento: true,
+  const usuario = await prisma.usuarios.findUnique({
+    where: { id },
+    include: {
+      emprendimiento: {
+        include: {
+          Categorias: {
+            select: {
+              id: true,
+              nombre: true
+            }
+          }
         }
-    });
-    if (!encontrarUsuario) {
-        throw new Error("No se encontro el Usuario");
+      }
     }
-    return encontrarUsuario;
-}
+  });
+
+  if (!usuario) {
+    throw new Error("No se encontró el Usuario");
+  }
+
+  return usuario;
+};
