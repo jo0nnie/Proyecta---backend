@@ -42,7 +42,7 @@ export const LoguearUsuario = async ({ email, contrasena }) => {
     throw new Error("Usuario no Encontrado");
   }
 
-  const isMatch = bcrypt.compare(contrasena, usuario.contrasena);
+  const isMatch = await bcrypt.compare(contrasena, usuario.contrasena);
   if (!isMatch) throw new Error("Usuario y/o Contraseña incorrectos");
 
   const token = jwt.sign({ id: usuario.id, email: usuario.email }, SECRET, {
