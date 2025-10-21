@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { SECRET } from "../constants/constants.js";
-import prisma from "../prisma.js";
+import prisma from "../prisma/client.js";
 
 export const RegistrarUsuario = async ({
   nombre,
@@ -45,7 +45,7 @@ export const LoguearUsuario = async ({ email, contrasena }) => {
   const isMatch = bcrypt.compare(contrasena, usuario.contrasena);
   if (!isMatch) throw new Error("Usuario y/o Contraseña incorrectos");
 
-  const token = jwt.sign({ email: usuario.email }, SECRET, {
+  const token = jwt.sign({ id: usuario.id, email: usuario.email }, SECRET, {
     expiresIn: "1h",
   });
 

@@ -100,6 +100,8 @@ model permisos {
 model planes {
   id            Int             @id @default(autoincrement())
   nombre        String
+  descripcion   String
+  duracion      String
   precio        Float
   carritositems carritositems[]
 }

@@ -16,7 +16,9 @@ CREATE TABLE `Usuarios` (
 -- CreateTable
 CREATE TABLE `Carritos` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `usuariosId` INTEGER NOT NULL,
 
+    UNIQUE INDEX `Carritos_usuariosId_key`(`usuariosId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -41,6 +43,7 @@ CREATE TABLE `Emprendimientos` (
     `visibilidad` INTEGER NOT NULL,
     `carritosItemsId` INTEGER NULL,
     `usuariosId` INTEGER NULL,
+    `categoriasId` INTEGER NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -159,7 +162,7 @@ CREATE TABLE `Categorias` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `Usuarios` ADD CONSTRAINT `Usuarios_carritosId_fkey` FOREIGN KEY (`carritosId`) REFERENCES `Carritos`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `Carritos` ADD CONSTRAINT `Carritos_usuariosId_fkey` FOREIGN KEY (`usuariosId`) REFERENCES `Usuarios`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `CarritosItems` ADD CONSTRAINT `CarritosItems_planesId_fkey` FOREIGN KEY (`planesId`) REFERENCES `Planes`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
@@ -172,6 +175,9 @@ ALTER TABLE `Emprendimientos` ADD CONSTRAINT `Emprendimientos_carritosItemsId_fk
 
 -- AddForeignKey
 ALTER TABLE `Emprendimientos` ADD CONSTRAINT `Emprendimientos_usuariosId_fkey` FOREIGN KEY (`usuariosId`) REFERENCES `Usuarios`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Emprendimientos` ADD CONSTRAINT `Emprendimientos_categoriasId_fkey` FOREIGN KEY (`categoriasId`) REFERENCES `Categorias`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Pagos` ADD CONSTRAINT `Pagos_usuarioId_fkey` FOREIGN KEY (`usuarioId`) REFERENCES `Usuarios`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
