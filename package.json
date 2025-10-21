@@ -15,10 +15,7 @@
   "dependencies": {
     "@prisma/client": "^6.17.1",
     "bcryptjs": "^3.0.2",
-<<<<<<< HEAD
     "cloudinary": "^2.8.0",
-=======
->>>>>>> 4bb50d6 (se modificaron los endpoints de usuario y se cambio el lugar de las rutas a server.js)
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
