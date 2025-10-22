@@ -1,6 +1,7 @@
 import express from "express";
-import emprendimientosRoutes from "./routes/emprendimientosRoutes.js"; 
-import usuariosRoutes from "./routes/usuarioRoutes.js"
+import emprendimientosRoutes from "./routes/emprendimientosRoutes.js";
+import categoriasRoutes from "./routes/categoriasRoutes.js";
+import usuariosRoutes from "./routes/usuarioRoutes.js";
 import carritoRoutes from "./routes/carritoRoutes.js";
 import cors from "cors";
 import fileUpload from "express-fileupload";
@@ -27,6 +28,8 @@ app.use("/emprendimientos", emprendimientosRoutes);
 app.use("/usuarios", usuariosRoutes);
 // rutas de carrito
 app.use("/carritos", carritoRoutes);
+//rutas de categorias
+app.use("/categorias", categoriasRoutes);
 
 //rutas de planes
 app.use("/planes", planesRoutes);
