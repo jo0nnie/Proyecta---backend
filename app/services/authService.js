@@ -102,6 +102,6 @@ export const verificarEmail = async (token) => {
     where: { id: userId },
     data: { verificado: true },
   });
-
+  //msg de service de usuario verificado
   return { mensaje: `Su correo ${usuario.email} fue verificado` };
 };
