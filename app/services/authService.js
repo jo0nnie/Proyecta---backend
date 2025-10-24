@@ -45,6 +45,11 @@ export const LoguearUsuario = async ({ email, contrasena }) => {
   const isMatch = await bcrypt.compare(contrasena, usuario.contrasena);
   if (!isMatch) throw new Error("Usuario y/o Contraseña incorrectos");
 
+  await prisma.usuarios.update({
+    where: { email },
+    data: { estado: true },
+  });
+
   const token = jwt.sign({ id: usuario.id, email: usuario.email }, SECRET, {
     expiresIn: "1h",
   });
@@ -53,24 +58,22 @@ export const LoguearUsuario = async ({ email, contrasena }) => {
       nombre: usuario.nombre,
       apellido: usuario.apellido,
       correo: usuario.email,
-      estado: usuario.estado
+      estado: true,
     },
     token,
-    
-    
   };
 };
 
 export const LogoutUsuario = async ({ email }) => {
   const usuario = await prisma.usuarios.findUnique({
-    where: {email}
+    where: { email },
   });
-  if(!usuario){
-    throw new Error('Usuario no logueado')
+  if (!usuario) {
+    throw new Error("Usuario no logueado");
   }
   await prisma.usuarios.update({
-    where: {email},
-    data: {estado: false},
+    where: { email },
+    data: { estado: false },
   });
-  return {mensaje: 'Usuario desconectado', email}
+  return { mensaje: "Usuario desconectado", email };
 };
