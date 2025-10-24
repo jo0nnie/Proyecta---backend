@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import prisma from "../prisma/client.js";
 
 export const authMiddleware = async (req, res, next) => {
+  console.log("Pasó por authMiddleware:", req.method, req.path); 
   const authHeader = req.headers["authorization"];
 
   if (!authHeader) {

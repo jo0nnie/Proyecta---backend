@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { SECRET } from "../constants/constants.js";
 import prisma from "../prisma/client.js";
-
+import { enviarCorreoVerificacion } from "../utils/resend/enviarCorreoVerificacion.js";
 export const RegistrarUsuario = async ({
   nombre,
   apellido,
@@ -28,8 +28,14 @@ export const RegistrarUsuario = async ({
       email,
       fechaNacimiento: new Date(fechaNacimiento || null),
       estado: true,
+      verificado: false,
     },
   });
+  const PORT = process.env.PORT || 3000;
+  const token = jwt.sign({ id: nuevoUsuario.id }, SECRET, { expiresIn: "1h" });
+  const url = `http://localhost:${PORT}/auth/verificar-email?token=${token}`;
+  await enviarCorreoVerificacion(email, url);
+
 
   return { usuario: nuevoUsuario };
 };
@@ -76,4 +82,26 @@ export const LogoutUsuario = async ({ email }) => {
     data: { estado: false },
   });
   return { mensaje: "Usuario desconectado", email };
+};
+
+
+export const verificarEmail = async (token) => {
+  if (!token) throw new Error("Token no proporcionado");
+
+  const decoded = jwt.verify(token, SECRET);
+  const userId = decoded.id;
+
+  const usuario = await prisma.usuarios.findUnique({ where: { id: userId } });
+  if (!usuario) throw new Error("Usuario no encontrado");
+
+  if (usuario.verificado) {
+    return { mensaje: "El correo ya estaba verificado" };
+  }
+
+  await prisma.usuarios.update({
+    where: { id: userId },
+    data: { verificado: true },
+  });
+
+  return { mensaje: `Su correo ${usuario.email} fue verificado` };
 };

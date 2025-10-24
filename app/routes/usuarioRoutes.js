@@ -11,7 +11,7 @@ import {
 import {
   registrarUsuario,
   loguearUsuario,
-  logoutUsuario
+  logoutUsuario, 
 } from '../controllers/authController.js'
 import { authMiddleware } from '../middlewares/authMiddleware.js'
 
@@ -23,6 +23,10 @@ router.post('/registro', registrarUsuario)
 router.post('/login', loguearUsuario)
 //post logout
 router.post('/logout', logoutUsuario)
+
+
+
+
 //rutas para el usuario
 //get usuario
 router.get("/me", authMiddleware, ObtenerUsuarioLogueado);
