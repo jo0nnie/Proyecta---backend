@@ -10,8 +10,9 @@ import {
 } from "../controllers/usuarioController.js";
 import {
   registrarUsuario,
-  loguearUsuario
-} from '../controllers/userController.js'
+  loguearUsuario,
+  logoutUsuario, 
+} from '../controllers/authController.js'
 import { authMiddleware } from '../middlewares/authMiddleware.js'
 
 const router = express.Router();
@@ -20,6 +21,11 @@ const router = express.Router();
 router.post('/registro', registrarUsuario)
 //post login
 router.post('/login', loguearUsuario)
+//post logout
+router.post('/logout', logoutUsuario)
+
+
+
 
 //rutas para el usuario
 //get usuario

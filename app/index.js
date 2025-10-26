@@ -3,6 +3,7 @@ import emprendimientosRoutes from "./routes/emprendimientosRoutes.js";
 import categoriasRoutes from "./routes/categoriasRoutes.js";
 import usuariosRoutes from "./routes/usuarioRoutes.js";
 import carritoRoutes from "./routes/carritoRoutes.js";
+import authRoutes from './routes/authRoutes.js'
 import cors from "cors";
 import fileUpload from "express-fileupload";
 import planesRoutes from "./routes/planesRoutes.js";
@@ -26,6 +27,8 @@ app.use(express.json());
 app.use("/emprendimientos", emprendimientosRoutes);
 //rutas de usuarios
 app.use("/usuarios", usuariosRoutes);
+// ruta de autenticacion
+app.use('/auth', authRoutes)
 // rutas de carrito
 app.use("/carritos", carritoRoutes);
 //rutas de categorias

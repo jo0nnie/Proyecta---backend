@@ -19,7 +19,8 @@ model Usuarios {
   carrito         Carritos?
   emprendimiento  Emprendimientos[]
   estado          Boolean
-  carritosId      Int?
+  verificado      Boolean           @default(false)
+  carritosId Int?
 }
 
 model Carritos {
