@@ -6,14 +6,13 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../app/generated/prisma"
 }
 
 model Usuarios {
   id              Int               @id @default(autoincrement())
   nombre          String?           @db.VarChar(255)
   apellido        String?           @db.VarChar(255)
-  contrasena      String?           @db.VarChar(20)
+  contrasena      String?           @db.VarChar(255)
   email           String            @unique(map: "email") @db.VarChar(255)
   fechaNacimiento DateTime
   pagos           Pagos[]
@@ -22,6 +21,8 @@ model Usuarios {
   favoritos       Favoritos?
   emprendimiento  Emprendimientos[]
   estado          Boolean
+  verificado      Boolean           @default(false)
+  carritosId Int?
 }
 
 model Carritos {
@@ -126,6 +127,16 @@ model Ubicaciones {
   id  Int    @id @default(autoincrement())
   lat String
   lng String
+}
+
+// descripcion???
+model Planes {
+  id            Int             @id @default(autoincrement())
+  nombre        String
+  descripcion   String
+  duracion      String
+  precio        Float
+  CarritosItems CarritosItems[]
 }
 
 model Roles {
