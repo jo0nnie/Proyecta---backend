@@ -81,15 +81,6 @@ model Favoritos {
   emprendimientos  Emprendimientos[]
 }
 
-model Planes {
-  id          Int      @id @default(autoincrement())
-  nombre      String
-  descripcion String
-  fechaInicio DateTime
-  fechaFinal  DateTime
-  precio      Float
-  carritosItems CarritosItems[]
-}
 
 model Pagos {
   id        Int      @id @default(autoincrement())
