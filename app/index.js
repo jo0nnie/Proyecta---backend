@@ -4,6 +4,7 @@ import categoriasRoutes from "./routes/categoriasRoutes.js";
 import usuariosRoutes from "./routes/usuarioRoutes.js";
 import carritoRoutes from "./routes/carritoRoutes.js";
 import authRoutes from './routes/authRoutes.js'
+import pagosRoutes from './routes/pagosRoutes.js'
 import cors from "cors";
 import fileUpload from "express-fileupload";
 import planesRoutes from "./routes/planesRoutes.js";
@@ -33,6 +34,8 @@ app.use('/auth', authRoutes)
 app.use("/carritos", carritoRoutes);
 //rutas de categorias
 app.use("/categorias", categoriasRoutes);
+//ruta pagos
+app.use('pago', pagosRoutes)
 
 //rutas de planes
 app.use("/planes", planesRoutes);
