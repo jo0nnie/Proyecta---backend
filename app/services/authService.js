@@ -37,7 +37,7 @@ export const RegistrarUsuario = async ({
   await enviarCorreoVerificacion(email, url);
 
 
-  return { usuario: nuevoUsuario };
+  return { usuario: nuevoUsuario, token };
 };
 
 export const LoguearUsuario = async ({ email, contrasena }) => {
