@@ -3,7 +3,7 @@ import prisma from "../prisma/client.js";
 export const listarFavoritos = async (usuarioId) => {
   const favoritos = await prisma.favoritos.findMany({
     where: { usuarioId },
-    include: { emprendimiento: true },
+    include: { emprendimiento: { include: { Categorias: true } } },
   });
   return favoritos;
 };
