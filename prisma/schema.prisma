@@ -32,14 +32,23 @@ model Carritos {
   usuariosId      Int             @unique
   pago            Pagos[]
 }
+// model CarritosItems {
+//   id               Int              @id @default(autoincrement())
+//   carrito          Carritos         @relation(fields: [carritosId], references: [id])
+//   carritosId       Int
+//   plan             Planes           @relation(fields: [planesId], references: [id])
+//   planesId         Int
+//   emprendimiento   Emprendimientos  @relation(fields: [emprendimientoId], references: [id])
+//   emprendimientoId Int
+// }
 
 model CarritosItems {
   id              Int               @id @default(autoincrement())
   emprendimientos Emprendimientos[]
   Carritos        Carritos          @relation(fields: [carritosId], references: [id])
   carritosId      Int
-  planes          Planes            @relation(fields: [planesId], references: [id])
-  planesId        Int
+  planes   Planes @relation(fields: [planesId], references: [id])
+  planesId Int
 }
 
 model Boosteos {
@@ -54,23 +63,22 @@ model Boosteos {
 }
 
 model Emprendimientos {
-  id              Int            @id @default(autoincrement())
-  nombre          String?        @db.VarChar(255)
-  descripcion     String?        @db.VarChar(255)
-  ubicacion       String?        @db.VarChar(255)
-  contacto        String?        @db.VarChar(255)
-  imagen          String?        @db.VarChar(255)
-  redes           String?        @db.VarChar(255)
-  visibilidad     Int
-  historiales     Historiales[]
-  favoritos       Favoritos[]
-  CarritosItems   CarritosItems? @relation(fields: [carritosItemsId], references: [id])
-  carritosItemsId Int?
-  Usuarios        Usuarios       @relation(fields: [usuariosId], references: [id])
-  usuariosId      Int
-  Categorias      Categorias?    @relation(fields: [categoriasId], references: [id])
-  categoriasId    Int?
-  Boosteos        Boosteos[]
+  id            Int             @id @default(autoincrement())
+  nombre        String?         @db.VarChar(255)
+  descripcion   String?         @db.VarChar(255)
+  ubicacion     String?         @db.VarChar(255)
+  contacto      String?         @db.VarChar(255)
+  imagen        String?         @db.VarChar(255)
+  redes         String?         @db.VarChar(255)
+  visibilidad   Int
+  historiales   Historiales[]
+  favoritos     Favoritos[]
+  carritosItems CarritosItems[]
+  Usuarios      Usuarios        @relation(fields: [usuariosId], references: [id])
+  usuariosId    Int
+  Categorias    Categorias?     @relation(fields: [categoriasId], references: [id])
+  categoriasId  Int?
+  Boosteos      Boosteos[]
 }
 
 // model Sucursales {

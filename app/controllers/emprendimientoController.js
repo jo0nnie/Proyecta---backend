@@ -73,6 +73,8 @@ export const eliminarEmprendimiento = async (req, res) => {
 };
 
 // get
+
+
 export const obtenerEmprendimientos = async (req, res) => {
   try {
     const emprendimientos = await ObtenerEmprendimientos();
