@@ -32,7 +32,7 @@ export const RegistrarUsuario = async ({
     },
   });
   const PORT = process.env.PORT || 3000;
-  const token = jwt.sign({ id: nuevoUsuario.id }, SECRET, { expiresIn: "1h" });
+  const token = jwt.sign({ id: nuevoUsuario.id }, SECRET, { expiresIn: "1d" });
   const url = `http://localhost:${PORT}/auth/verificar-email?token=${token}`;
   await enviarCorreoVerificacion(email, url);
 

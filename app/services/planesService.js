@@ -7,15 +7,17 @@ import prisma from "../prisma/client.js";
 // {
 //     "nombre": "Impulso Inicial", string
 //     "descripcion": "Acceso completo a todas las funciones", string
+//     "duracion": 1
 //     "precio": 100.00 float
 // }
-export const CrearPlan = async ({ nombre, descripcion, duracion, precio }) => {
+// pasamos por días la duracion
+export const CrearPlan = async ({ nombre, descripcion, duracionDias, precio }) => {
     try {
         const nuevoPlan = await prisma.planes.create({
             data: {
                 nombre,
                 descripcion: Array.isArray(descripcion) ? descripcion.join('; ') : descripcion,
-                duracion,
+                duracionDias,
                 precio: parseFloat(precio)
             } 
         });

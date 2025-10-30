@@ -8,6 +8,7 @@ import prisma from "../prisma/client.js";
  * @param {number} data.categoriaId
  * @param {number} usuarioId - ID del usuario autenticado (extraído del token).
  */
+
 export async function CrearEmprendimiento({ nombre, descripcion, imagen, categoriaId, redes }, usuarioId) {
   //validar campos
   if (!nombre || !descripcion || !categoriaId) {
