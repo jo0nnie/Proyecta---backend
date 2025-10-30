@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { SECRET } from "../constants/constants.js";
 import prisma from "../prisma/client.js";
-import { enviarCorreoVerificacion } from "../utils/resend/enviarCorreoVerificacion.js";
+//import { enviarCorreoVerificacion } from "../utils/resend/enviarCorreoVerificacion.js";
 export const RegistrarUsuario = async ({
   nombre,
   apellido,
@@ -35,7 +35,6 @@ export const RegistrarUsuario = async ({
   const token = jwt.sign({ id: nuevoUsuario.id }, SECRET, { expiresIn: "1h" });
   const url = `http://localhost:${PORT}/auth/verificar-email?token=${token}`;
   await enviarCorreoVerificacion(email, url);
-
 
   return { usuario: nuevoUsuario };
 };
@@ -83,7 +82,6 @@ export const LogoutUsuario = async ({ email }) => {
   });
   return { mensaje: "Usuario desconectado", email };
 };
-
 
 export const verificarEmail = async (token) => {
   if (!token) throw new Error("Token no proporcionado");
