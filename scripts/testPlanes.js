@@ -1,4 +1,4 @@
-import prisma from "../app/prisma/client";
+import prisma from "../app/prisma/client.js";
 const testPlanes = async () => {
   try {
     const planes = await prisma.planes.findMany();
