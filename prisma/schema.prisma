@@ -23,6 +23,9 @@ model Usuarios {
   estado          Boolean
   verificado      Boolean           @default(false)
   carritosId      Int?
+  rol             Roles?            @relation(fields: [rolesId], references: [id])
+
+  rolesId Int?
 }
 
 model Carritos {
@@ -32,6 +35,7 @@ model Carritos {
   usuariosId      Int             @unique
   pago            Pagos[]
 }
+
 // model CarritosItems {
 //   id               Int              @id @default(autoincrement())
 //   carrito          Carritos         @relation(fields: [carritosId], references: [id])
@@ -47,8 +51,8 @@ model CarritosItems {
   emprendimientos Emprendimientos[]
   Carritos        Carritos          @relation(fields: [carritosId], references: [id])
   carritosId      Int
-  planes   Planes @relation(fields: [planesId], references: [id])
-  planesId Int
+  planes          Planes            @relation(fields: [planesId], references: [id])
+  planesId        Int
 }
 
 model Boosteos {
@@ -152,8 +156,9 @@ model Planes {
 }
 
 model Roles {
-  id     Int     @id @default(autoincrement())
-  nombre String? @db.VarChar(50)
+  id       Int        @id @default(autoincrement())
+  nombre   String?    @db.VarChar(50)
+  Usuarios Usuarios[]
 }
 
 model Permisos {
