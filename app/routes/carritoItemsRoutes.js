@@ -5,7 +5,7 @@ import {
     actualizarCarritoItem,
     obtenerCarritoItemPorId,
     obtenerItemsDeCarrito
-} from '../controllers/carritoItemController';
+} from '../controllers/carritoItemController.js';
 
 const router = express.Router();
 
@@ -16,8 +16,8 @@ router.post('/', crearCarritoItem);
 //obtener un item
 router.get('/:id', obtenerCarritoItemPorId);
 //obtener todos
-router.get('/', obtenerItemsDeCarrito);
-
+router.get('/:carritosId', obtenerItemsDeCarrito);
+ 
 //eliminar item
 router.delete('/:id', eliminarCarritoItem);
 

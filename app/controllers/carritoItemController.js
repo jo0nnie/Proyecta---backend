@@ -4,7 +4,7 @@ import {
   obtenerItemPorId,
   actualizarItem,
   eliminarItem
-} from '../services/carritosItemsService.js';
+} from '../services/carritoItemService.js';
 
 export const crearCarritoItem = async (req, res) => {
   const { carritosId, planesId, emprendimientosIds = [] } = req.body;
