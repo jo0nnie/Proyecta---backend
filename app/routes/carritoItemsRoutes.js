@@ -1,27 +1,28 @@
-import express from 'express';
+import express from "express";
 import {
-    crearCarritoItem,
-    eliminarCarritoItem,
-    actualizarCarritoItem,
-    obtenerCarritoItemPorId,
-    obtenerItemsDeCarrito
-} from '../controllers/carritoItemController.js';
+  crearCarritoItem,
+  eliminarCarritoItem,
+  actualizarCarritoItem,
+  obtenerCarritoItemPorId,
+  obtenerItemsDeCarrito,
+} from "../controllers/carritoItemController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
 //endpoints de carrito item
 //crear items de carrito
-router.post('/', crearCarritoItem);
+router.post("/", authMiddleware, crearCarritoItem);
 
 //obtener un item
-router.get('/:id', obtenerCarritoItemPorId);
+router.get("/:id", authMiddleware, obtenerCarritoItemPorId);
 //obtener todos
-router.get('/:carritosId', obtenerItemsDeCarrito);
- 
+router.get("/:carritosId", authMiddleware, obtenerItemsDeCarrito);
+
 //eliminar item
-router.delete('/:id', eliminarCarritoItem);
+router.delete("/:id", authMiddleware, eliminarCarritoItem);
 
 //editar item
-router.put('/:id', actualizarCarritoItem);
+router.put("/:id", authMiddleware, actualizarCarritoItem);
 
 export default router;
