@@ -9,7 +9,7 @@ export const RegistrarUsuario = async ({
   contrasena,
   email,
   fechaNacimiento,
-  rolesId 
+  rolesId
 }) => {
   const emailExistente = await prisma.usuarios.findUnique({
     where: { email },
@@ -43,9 +43,11 @@ export const RegistrarUsuario = async ({
     },
   });
 
-  const PORT = process.env.PORT || 3000;
-  const token = jwt.sign({ id: nuevoUsuario.id, rol: rolUsuario.nombre}, SECRET, { expiresIn: "1d" });
-  const url = `http://localhost:${PORT}/auth/verificar-email?token=${token}`;
+  const token = jwt.sign({ id: nuevoUsuario.id, rol: rolUsuario.nombre }, SECRET, { expiresIn: "1d" });
+  const url = `${process.env.FRONTEND_URL}/auth/verificar-email?token=${token}`;
+  console.log("URL generada para verificación:", url);
+
+
   await enviarCorreoVerificacion(email, url);
 
   return { usuario: nuevoUsuario, token };
