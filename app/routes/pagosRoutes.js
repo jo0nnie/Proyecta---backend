@@ -3,17 +3,18 @@ const router = express.Router();
 import {
     procesarPago,
     obtenerPagoPorId,
-    obtenerPagos
-} from "../controllers/pagosController";
+    obtenerTodosLosPagos
+} from "../controllers/pagosController.js";
+import { authMiddleware } from '../middlewares/authMiddleware.js'
 
 
 //crear o generar pago
-router.post('/', procesarPago)
+router.post('/', authMiddleware, procesarPago)
 
 //obtener uno de los pagos
-router.get('/:id', obtenerPagoPorId)
+router.get('/:id', authMiddleware, obtenerPagoPorId)
 
 //obtener todos los pagos
-router.get('/', obtenerPagos)
+router.get('/', authMiddleware, obtenerTodosLosPagos)
 
 export default router;
