@@ -53,7 +53,6 @@ export const crearMetodoDePago = async (usuarioId, datosTarjeta) => {
       tipoTarjeta,
       vencimiento: new Date(vencimiento),
       cvc: cvcValidado,
-      guardado: true,
       usuario: {
         connect: { id: usuarioId },
       },
@@ -126,7 +125,6 @@ export const listarMetodoDePagoPorId = async (id) => {
       numero: true,
       tipoTarjeta: true,
       vencimiento: true,
-      guardado: true,
       usuario: true,
     },
   });
@@ -140,17 +138,13 @@ export const listarMetodoDePagoPorId = async (id) => {
 
 export const listarTodosLosMetodosDePago = async (usuarioId) => {
   const metodos = await prisma.metodoPago.findMany({
-    where: {
-      usuarioId,
-      guardado: true,
-    },
+    where: { usuarioId },
     select: {
       id: true,
       nombreDelTitular: true,
       numero: true,
       tipoTarjeta: true,
       vencimiento: true,
-      guardado: true,
       usuario: true,
     },
   });

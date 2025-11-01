@@ -103,7 +103,6 @@ model MetodoPago {
   tipoTarjeta      String
   vencimiento      DateTime
   cvc              String?
-  guardado         Boolean  @default(false)
   pagos            Pagos[]
 }
 
