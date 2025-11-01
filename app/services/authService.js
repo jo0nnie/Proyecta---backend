@@ -54,6 +54,7 @@ export const RegistrarUsuario = async ({
 export const LoguearUsuario = async ({ email, contrasena }) => {
   const usuario = await prisma.usuarios.findUnique({
     where: { email },
+    include: { rol: true },
   });
   if (!usuario) {
     throw new Error("Usuario no Encontrado");
@@ -67,7 +68,7 @@ export const LoguearUsuario = async ({ email, contrasena }) => {
     data: { estado: true },
   });
 
-  const token = jwt.sign({ id: usuario.id, email: usuario.email }, SECRET, {
+  const token = jwt.sign({ id: usuario.id, email: usuario.email, rol: usuario.rol.nombre }, SECRET, {
     expiresIn: "1h",
   });
   return {
@@ -76,6 +77,7 @@ export const LoguearUsuario = async ({ email, contrasena }) => {
       apellido: usuario.apellido,
       correo: usuario.email,
       estado: true,
+      rol: usuario.rol.nombre
     },
     token,
   };
