@@ -16,7 +16,14 @@ import {
 import { authMiddleware } from '../middlewares/authMiddleware.js'
 
 const router = express.Router();
-
+// {
+//   "nombre": "TestUser",
+//   "apellido": "testUser",
+//   "email": "admin@ejemplo.com",
+//   "contrasena": "admin123",
+//   "fechaNacimiento": "1996-12-12",
+//   "rolesId": 2 si es que ese es el adminId
+// }
 //post register
 router.post('/registro', registrarUsuario)
 //post login

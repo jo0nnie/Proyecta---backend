@@ -7,6 +7,7 @@ import authRoutes from './routes/authRoutes.js'
 import cors from "cors";
 import fileUpload from "express-fileupload";
 import planesRoutes from "./routes/planesRoutes.js";
+import rolRoutes from './routes/rolRoutes.js'
 const app = express();
 app.use(
   cors({
@@ -36,4 +37,8 @@ app.use("/categorias", categoriasRoutes);
 
 //rutas de planes
 app.use("/planes", planesRoutes);
+
+//ruta de rol
+app.use('/roles', rolRoutes)
+
 export default app;

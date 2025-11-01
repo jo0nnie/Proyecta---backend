@@ -26,9 +26,9 @@ export const authMiddleware = async (req, res, next) => {
     if (!usuario || !usuario.estado) {
       return res.status(403).json({ error: "Sesión cerrada o usuario inactivo" });
     }
-    if (usuario.estado != true){
-      return res.status(403).json({error:'Tu email debe estar verificado para realizar esta accion'})
-    }
+    // if (usuario.verificado != true){
+    //   return res.status(403).json({error:'Tu email debe estar verificado para realizar esta accion'})
+    // }
 
     req.usuarioId = decoded.id;
     next();

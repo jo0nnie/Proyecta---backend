@@ -6,7 +6,7 @@ export const listarTodasLasCategorias = async () => {
       emprendimiento: true,
     },
     orderBy: {
-      id: "desc",
+      id: 'asc',
     },
   });
   return listaCategorias;
