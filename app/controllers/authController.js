@@ -2,7 +2,7 @@ import {
   LoguearUsuario,
   RegistrarUsuario,
   LogoutUsuario,
-  verificarEmail
+  verificarEmail,
 } from "../services/authService.js";
 
 
@@ -24,10 +24,10 @@ export const loguearUsuario = async (req, res, next) => {
   }
 };
 
-export const logoutUsuario = async (req, res, next) => {
+export const logoutUsuario = async (req, res) => {
   try {
-    const { email } = req.body;
-    const resultado = await LogoutUsuario({ email });
+    const id = req.usuarioId;
+    const resultado = await LogoutUsuario({ id });
     return res.status(200).json(resultado);
   } catch (error) {
     return res.status(400).json({ error: error.message });
@@ -43,3 +43,4 @@ export const VerificarEmail = async (req, res) => {
     res.status(400).json({ error: error.message || "Token inválido o expirado" });
   }
 };
+

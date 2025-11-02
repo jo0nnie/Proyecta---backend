@@ -6,6 +6,9 @@ async function main() {
     { nombre: 'Arte' },         // id 2
     { nombre: 'Moda' },         // id 3
     { nombre: 'Gastronomía' },  // id 4
+    {nombre: 'Hogar'},
+    {nombre: 'Salud y Bienestar'},
+    {nombre: 'Regalos'}
   ];
 
   try {

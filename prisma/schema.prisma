@@ -20,6 +20,7 @@ model Usuarios {
   historial       Historiales?
   favoritos       Favoritos?
   emprendimiento  Emprendimientos[]
+  metodosPago     MetodoPago[]
   estado          Boolean
   verificado      Boolean           @default(false)
 }
@@ -32,6 +33,16 @@ model Carritos {
   pago            Pagos[]
 }
 
+// model CarritosItems {
+//   id               Int              @id @default(autoincrement())
+//   carrito          Carritos         @relation(fields: [carritosId], references: [id])
+//   carritosId       Int
+//   plan             Planes           @relation(fields: [planesId], references: [id])
+//   planesId         Int
+//   emprendimiento   Emprendimientos  @relation(fields: [emprendimientoId], references: [id])
+//   emprendimientoId Int
+// }
+
 model CarritosItems {
   id              Int               @id @default(autoincrement())
   carrito         Carritos          @relation(fields: [carritoId], references: [id])
@@ -39,6 +50,17 @@ model CarritosItems {
   planes          Planes            @relation(fields: [planesId], references: [id])
   planesId        Int
   emprendimientos Emprendimientos[]
+}
+
+model Boosteos {
+  id               Int             @id @default(autoincrement())
+  emprendimiento   Emprendimientos @relation(fields: [emprendimientoId], references: [id])
+  emprendimientoId Int
+  plan             Planes          @relation(fields: [planId], references: [id])
+  planId           Int
+  fechaInicio      DateTime        @default(now())
+  fechaFin         DateTime
+  activo           Boolean         @default(true)
 }
 
 model Emprendimientos {
@@ -58,6 +80,7 @@ model Emprendimientos {
   usuariosId      Int
   Categorias      Categorias?    @relation(fields: [categoriasId], references: [id])
   categoriasId    Int?
+  Boosteos      Boosteos[]
 }
 
 // model Sucursales {
@@ -119,19 +142,23 @@ model Ubicaciones {
 }
 
 // descripcion???
+//Duracion en entero ya que vamos a tener una funcion para calcular el precio
 model Planes {
   id            Int             @id @default(autoincrement())
   nombre        String
-  descripcion   String
-  duracion      String
+  descripcion   String          @db.Text
+  duracionDias  Int
   precio        Float
   CarritosItems CarritosItems[]
+  Boosteos[]
 }
 
 model Roles {
-  id     Int     @id @default(autoincrement())
-  nombre String? @db.VarChar(50)
+  id       Int        @id @default(autoincrement())
+  nombre   String?    @db.VarChar(50)
+  Usuarios Usuarios[]
 }
+
 
 model Permisos {
   id     Int     @id @default(autoincrement())

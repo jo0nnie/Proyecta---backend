@@ -1,12 +1,18 @@
 import express from "express";
 import emprendimientosRoutes from "./routes/emprendimientosRoutes.js";
 import categoriasRoutes from "./routes/categoriasRoutes.js";
+import favoritosRoutes from "./routes/favoritosRoutes.js";
 import usuariosRoutes from "./routes/usuarioRoutes.js";
 import carritoRoutes from "./routes/carritoRoutes.js";
+import carritoItemsRoutes from "./routes/carritoItemsRoutes.js"
 import authRoutes from './routes/authRoutes.js'
+import pagosRoutes from './routes/pagosRoutes.js'
 import cors from "cors";
 import fileUpload from "express-fileupload";
 import planesRoutes from "./routes/planesRoutes.js";
+import rolRoutes from './routes/rolRoutes.js'
+import estadisticasRoutes from './routes/estadisticasRoutes.js'
+
 const app = express();
 app.use(
   cors({
@@ -28,12 +34,23 @@ app.use("/emprendimientos", emprendimientosRoutes);
 //rutas de usuarios
 app.use("/usuarios", usuariosRoutes);
 // ruta de autenticacion
-app.use('/auth', authRoutes)
+app.use("/auth", authRoutes);
 // rutas de carrito
 app.use("/carritos", carritoRoutes);
+// rutas de carritoItem
+app.use("/items", carritoItemsRoutes);
 //rutas de categorias
 app.use("/categorias", categoriasRoutes);
+//ruta pagos
+app.use('/pagos', pagosRoutes);
 
 //rutas de planes
 app.use("/planes", planesRoutes);
+
+//ruta de rol
+app.use('/roles', rolRoutes)
+
+//ruta admin dashboard 
+//obtener stats
+app.use("/estadisticas", estadisticasRoutes)
 export default app;
