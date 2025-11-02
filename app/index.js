@@ -1,6 +1,7 @@
 import express from "express";
 import emprendimientosRoutes from "./routes/emprendimientosRoutes.js";
 import categoriasRoutes from "./routes/categoriasRoutes.js";
+import favoritosRoutes from "./routes/favoritosRoutes.js";
 import usuariosRoutes from "./routes/usuarioRoutes.js";
 import carritoRoutes from "./routes/carritoRoutes.js";
 import historialRoutes from "./routes/historialRoutes.js";

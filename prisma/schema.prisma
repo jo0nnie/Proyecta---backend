@@ -78,8 +78,9 @@ model Historiales {
 model Favoritos {
   id Int @id @default(autoincrement())
   usuario  Usuarios  @relation(fields: [usuarioId], references: [id])
-  usuarioId  Int       @unique
-  emprendimientos  Emprendimientos[]
+  usuarioId  Int
+  emprendimiento Emprendimientos @relation(fields: [emprendimientoId], references: [id])
+  emprendimientoId  Int
 }
 
 
