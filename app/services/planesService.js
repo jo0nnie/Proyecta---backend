@@ -17,7 +17,7 @@ export const CrearPlan = async ({ nombre, descripcion, duracion, precio }) => {
                 descripcion: Array.isArray(descripcion) ? descripcion.join('; ') : descripcion,
                 duracion,
                 precio: parseFloat(precio)
-            }
+            } 
         });
         return nuevoPlan;
     } catch (error) {

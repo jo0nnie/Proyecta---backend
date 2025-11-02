@@ -3,6 +3,7 @@ import emprendimientosRoutes from "./routes/emprendimientosRoutes.js";
 import categoriasRoutes from "./routes/categoriasRoutes.js";
 import usuariosRoutes from "./routes/usuarioRoutes.js";
 import carritoRoutes from "./routes/carritoRoutes.js";
+import metodosDePagoRoutes from "./routes/metodosDePagoRoutes.js";
 import authRoutes from './routes/authRoutes.js'
 import cors from "cors";
 import fileUpload from "express-fileupload";
@@ -33,6 +34,8 @@ app.use('/auth', authRoutes)
 app.use("/carritos", carritoRoutes);
 //rutas de categorias
 app.use("/categorias", categoriasRoutes);
+//ruta de Metodos de pago
+app.use("/metodos-de-pago", metodosDePagoRoutes);
 
 //rutas de planes
 app.use("/planes", planesRoutes);
