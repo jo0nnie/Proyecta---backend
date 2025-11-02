@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { SECRET } from "../constants/constants.js";
 import prisma from "../prisma/client.js";
-//import { enviarCorreoVerificacion } from "../utils/resend/enviarCorreoVerificacion.js";
+import { enviarCorreoVerificacion } from "../utils/resend/enviarCorreoVerificacion.js";
 export const RegistrarUsuario = async ({
   nombre,
   apellido,
@@ -42,7 +42,7 @@ export const RegistrarUsuario = async ({
       rolesId: rolUsuario.id
     },
   });
-
+//
   const token = jwt.sign({ id: nuevoUsuario.id, rol: rolUsuario.nombre }, SECRET, { expiresIn: "1d" });
   const url = `${process.env.FRONTEND_URL}/auth/verificar-email?token=${token}`;
   console.log("URL generada para verificación:", url);

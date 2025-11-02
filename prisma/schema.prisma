@@ -25,7 +25,6 @@ model Usuarios {
   verificado      Boolean           @default(false)
   carritosId      Int?
   rol             Roles?            @relation(fields: [rolesId], references: [id])
-
   rolesId Int?
 }
 
@@ -125,7 +124,6 @@ model MetodoPago {
   tipoTarjeta      String
   vencimiento      DateTime
   cvc              String?
-  pagos            Pagos[]
 }
 
 model Direcciones {
