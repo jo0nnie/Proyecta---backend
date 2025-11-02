@@ -32,7 +32,6 @@ export const editarUnUsuario = async (id, datos) => {
         if (esIgual) {
             throw new Error("La nueva contraseña debe ser diferente a la actual.");
         }
-
         const hashedContrasena = await bcrypt.hash(contrasena, 10);
         dataToUpdate.contrasena = hashedContrasena;
     }
@@ -46,35 +45,33 @@ export const editarUnUsuario = async (id, datos) => {
 };
 
 export const eliminarUnUsuario = async (id) => {
-
     const encontrarUsuario = await prisma.usuarios.findUnique({
         where: { id }
     });
     if (!encontrarUsuario) {
         throw new Error("No se encontro el Usuario");
     }
-
     const eliminarElUsuario = await prisma.usuarios.delete({
         where: { id }
-    })
+    });
     return eliminarElUsuario;
-}
+};
 
 export const listarTodosLosUsuarios = async () => {
-
     const mostrarUsuarios = await prisma.usuarios.findMany({
         include: {
             emprendimiento: true,
+            carrito: true
         },
         orderBy: {
             id: 'desc',
         },
     });
     return mostrarUsuarios;
-}
+};
 
 export const listarUsuarioPorId = async (id) => {
-    const usuario = await prisma.usuarios.findUnique({
+    let usuario = await prisma.usuarios.findUnique({
         where: { id },
         include: {
             carrito: {
@@ -82,23 +79,57 @@ export const listarUsuarioPorId = async (id) => {
                     idCarritosItems: {
                         include: {
                             planes: true,
-                            emprendimientos: true
-                        }
-                    }
-                }
+                            emprendimientos: true,
+                        },
+                    },
+                },
             },
             emprendimiento: {
                 include: {
                     Categorias: {
-                        select: { id: true, nombre: true }
-                    }
-                }
-            }
-        }
+                        select: { id: true, nombre: true },
+                    },
+                },
+            },
+        },
     });
 
     if (!usuario) {
         throw new Error("No se encontró el Usuario");
+    }
+
+    if (!usuario.carrito) {
+        const nuevoCarrito = await prisma.carritos.create({
+            data: {
+                usuario: { connect: { id: usuario.id } },
+            },
+            include: {
+                idCarritosItems: true,
+            },
+        });
+
+        usuario = await prisma.usuarios.findUnique({
+            where: { id },
+            include: {
+                carrito: {
+                    include: {
+                        idCarritosItems: {
+                            include: {
+                                planes: true,
+                                emprendimientos: true,
+                            },
+                        },
+                    },
+                },
+                emprendimiento: {
+                    include: {
+                        Categorias: {
+                            select: { id: true, nombre: true },
+                        },
+                    },
+                },
+            },
+        });
     }
 
     return usuario;
