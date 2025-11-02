@@ -29,7 +29,7 @@ router.post('/registro', registrarUsuario)
 //post login
 router.post('/login', loguearUsuario)
 //post logout
-router.post('/logout', logoutUsuario)
+router.post('/logout',authMiddleware, logoutUsuario)
 
 
 

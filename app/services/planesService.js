@@ -19,7 +19,7 @@ export const CrearPlan = async ({ nombre, descripcion, duracionDias, precio }) =
                 descripcion: Array.isArray(descripcion) ? descripcion.join('; ') : descripcion,
                 duracionDias,
                 precio: parseFloat(precio)
-            } 
+            }
         });
         return nuevoPlan;
     } catch (error) {
@@ -29,7 +29,11 @@ export const CrearPlan = async ({ nombre, descripcion, duracionDias, precio }) =
 };
 export const ObtenerPlanes = async () => {
     try {
-        const planes = await prisma.planes.findMany();
+        const planes = await prisma.planes.findMany({
+            orderBy: {
+                precio: 'asc', 
+            },
+        });
         return planes;
     } catch (error) {
         throw new Error("Error al obtener los planes");
@@ -59,7 +63,7 @@ export const EliminarPlan = async (id) => {
 
 // actualizar service
 export const ActualizarPlan = async (id, datos) => {
-    try {   
+    try {
         const actualizado = await prisma.planes.update({
             where: { id },
             data: {
@@ -67,11 +71,11 @@ export const ActualizarPlan = async (id, datos) => {
                 descripcion: Array.isArray(datos.descripcion) ? datos.descripcion.join('; ') : datos.descripcion,
                 duracion: datos.duracion,
                 precio: parseFloat(datos.precio)
-            } 
+            }
         });
         return actualizado;
     } catch (error) {
-        throw new Error("Error al actualizar el plan");         
+        throw new Error("Error al actualizar el plan");
 
     }
 };

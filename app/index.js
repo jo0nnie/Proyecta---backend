@@ -8,6 +8,8 @@ import cors from "cors";
 import fileUpload from "express-fileupload";
 import planesRoutes from "./routes/planesRoutes.js";
 import rolRoutes from './routes/rolRoutes.js'
+import estadisticasRoutes from './routes/estadisticasRoutes.js'
+
 const app = express();
 app.use(
   cors({
@@ -41,4 +43,7 @@ app.use("/planes", planesRoutes);
 //ruta de rol
 app.use('/roles', rolRoutes)
 
+//ruta admin dashboard 
+//obtener stats
+app.use("/estadisticas", estadisticasRoutes)
 export default app;
