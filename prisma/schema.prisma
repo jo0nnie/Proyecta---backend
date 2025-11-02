@@ -140,9 +140,11 @@ model Planes {
 }
 
 model Roles {
-  id     Int     @id @default(autoincrement())
-  nombre String? @db.VarChar(50)
+  id       Int        @id @default(autoincrement())
+  nombre   String?    @db.VarChar(50)
+  Usuarios Usuarios[]
 }
+
 
 model Permisos {
   id     Int     @id @default(autoincrement())
