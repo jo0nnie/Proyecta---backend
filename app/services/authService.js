@@ -36,7 +36,6 @@ export const RegistrarUsuario = async ({
   const url = `http://localhost:${PORT}/auth/verificar-email?token=${token}`;
   await enviarCorreoVerificacion(email, url);
 
-
   return { usuario: nuevoUsuario };
 };
 
@@ -83,7 +82,6 @@ export const LogoutUsuario = async ({ email }) => {
   });
   return { mensaje: "Usuario desconectado", email };
 };
-
 
 export const verificarEmail = async (token) => {
   if (!token) throw new Error("Token no proporcionado");
