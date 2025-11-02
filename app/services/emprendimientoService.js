@@ -147,3 +147,24 @@ export async function ActualizarEmprendimiento(id, datos, usuarioId) {
 
   return actualizado;
 }
+
+export const ObtenerEmprendimientosUsuario = async (usuarioId) => {
+  console.log("service:", usuarioId);
+  return await prisma.emprendimientos.findMany({
+    where: { usuariosId: usuarioId }, 
+    select: {
+      id: true,
+      nombre: true,
+      descripcion: true,
+      ubicacion: true,
+      contacto: true,
+      imagen: true,
+      visibilidad: true,
+      Categorias: {
+        select: { nombre: true },
+      },
+    },
+  });
+};
+
+

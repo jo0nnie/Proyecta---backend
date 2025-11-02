@@ -13,6 +13,7 @@ import {
   loguearUsuario,
   logoutUsuario, 
 } from '../controllers/authController.js'
+import { obtenerEmprendimientoUsuario } from "../controllers/emprendimientoController.js";
 import { authMiddleware } from '../middlewares/authMiddleware.js'
 
 const router = express.Router();
@@ -41,7 +42,8 @@ router.get("/me", authMiddleware, ObtenerUsuarioLogueado);
 router.put("/me", authMiddleware, EditarUsuarioLogueado);
 //delete usuario
 router.delete("/me", authMiddleware, EliminarUsuarioLogueado);
-
+//get emprendimientos usuario
+router.get("/emprendimientos", authMiddleware, obtenerEmprendimientoUsuario)
 //rutas para admin
 router.get("/", ListarUsuarios);
 router.get("/:id", authMiddleware, ListarUsuarioPorId);

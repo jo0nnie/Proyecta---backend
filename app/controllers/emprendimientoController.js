@@ -4,6 +4,7 @@ import {
   ObtenerEmprendimientos,
   ObtenerEmprendimientoPorId,
   ActualizarEmprendimiento,
+  ObtenerEmprendimientosUsuario,
 } from "../services/emprendimientoService.js";
 import { uploadImage } from "../utils/cloudinary.js";
 
@@ -138,3 +139,23 @@ export const actualizarEmprendimiento = async (req, res) => {
     return res.status(400).json({ msg: error.message });
   }
 };
+
+
+//get emprendimientos usuario
+export const obtenerEmprendimientoUsuario = async (req, res) => {
+  try {
+    const usuarioIdRaw = req.usuarioId;
+    const usuarioId = parseInt(usuarioIdRaw);
+
+    if (isNaN(usuarioId)) {
+      return res.status(400).json({ msg: "ID inválido" });
+    }
+
+    const emprendimientos = await ObtenerEmprendimientosUsuario(usuarioId);
+    res.status(200).json(emprendimientos);
+  } catch (error) {
+    console.error("Error al obtener emprendimientos:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
+
