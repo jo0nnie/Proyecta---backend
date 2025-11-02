@@ -23,7 +23,10 @@ export const procesarPago = async (req, res) => {
             tarjetaTemporal,
         });
 
-        res.status(201).json(pago);
+        res.status(201).json({
+            msg: "Pago realizado con éxito",
+            pago: pago
+        });
     } catch (error) {
         res.status(400).json({ msg: error.message });
     }

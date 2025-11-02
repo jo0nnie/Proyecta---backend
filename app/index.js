@@ -35,7 +35,7 @@ app.use("/carritos", carritoRoutes);
 //rutas de categorias
 app.use("/categorias", categoriasRoutes);
 //ruta pagos
-app.use('pago', pagosRoutes)
+app.use('/pagos', pagosRoutes);
 
 //rutas de planes
 app.use("/planes", planesRoutes);

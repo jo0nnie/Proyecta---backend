@@ -31,13 +31,6 @@ const validarCVC = (cvc) => {
 
 export const crearPago = async (usuarioId, { metodoPagoId, tarjetaTemporal }) => {
 
-    if (!metodoPagoId && !tarjetaTemporal) {
-        throw new Error("Debe proporcionar un método de pago guardado o una tarjeta temporal");
-    }
-    if (metodoPagoId && tarjetaTemporal) {
-        throw new Error("No se puede usar un método guardado y una tarjeta temporal simultáneamente");
-    }
-
     let numero, vencimiento;
 
     if (tarjetaTemporal) {

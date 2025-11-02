@@ -82,7 +82,12 @@ CREATE TABLE `Pagos` (
 -- CreateTable
 CREATE TABLE `MetodoPago` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `nombre` VARCHAR(191) NOT NULL,
+    `usuarioId` INTEGER NOT NULL,
+    `nombreDelTitular` VARCHAR(100) NOT NULL,
+    `numero` VARCHAR(191) NOT NULL,
+    `tipoTarjeta` VARCHAR(191) NOT NULL,
+    `vencimiento` DATETIME(3) NOT NULL,
+    `cvc` VARCHAR(191) NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -213,6 +218,9 @@ ALTER TABLE `Pagos` ADD CONSTRAINT `Pagos_carritoId_fkey` FOREIGN KEY (`carritoI
 
 -- AddForeignKey
 ALTER TABLE `Pagos` ADD CONSTRAINT `Pagos_metodoPagoId_fkey` FOREIGN KEY (`metodoPagoId`) REFERENCES `MetodoPago`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `MetodoPago` ADD CONSTRAINT `MetodoPago_usuarioId_fkey` FOREIGN KEY (`usuarioId`) REFERENCES `Usuarios`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Rubros` ADD CONSTRAINT `Rubros_categoriaId_fkey` FOREIGN KEY (`categoriaId`) REFERENCES `Categorias`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
