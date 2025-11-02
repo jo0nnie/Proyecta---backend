@@ -17,8 +17,8 @@ model Usuarios {
   fechaNacimiento DateTime
   pagos           Pagos[]
   carrito         Carritos?
-  historial       Historiales?      
-  favoritos       Favoritos?
+  historial       Historiales[]      
+  favoritos       Favoritos[]
   emprendimiento  Emprendimientos[]
   estado          Boolean
   verificado      Boolean           @default(false)
@@ -70,15 +70,17 @@ model Emprendimientos {
 model Historiales {
   id Int @id @default(autoincrement())
   usuario  Usuarios  @relation(fields: [usuarioId], references: [id])
-  usuarioId Int    @unique
-  emprendimientos  Emprendimientos[]
+  usuarioId Int    
+  emprendimientos  Emprendimientos @relation(fields: [emprendimientoId], references: [id])
+  emprendimientoId Int
 }
 
 model Favoritos {
   id Int @id @default(autoincrement())
   usuario  Usuarios  @relation(fields: [usuarioId], references: [id])
-  usuarioId  Int       @unique
-  emprendimientos  Emprendimientos[]
+  usuarioId  Int
+  emprendimiento Emprendimientos @relation(fields: [emprendimientoId], references: [id])
+  emprendimientoId  Int
 }
 
 

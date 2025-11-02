@@ -1,6 +1,7 @@
 import express from "express";
 import emprendimientosRoutes from "./routes/emprendimientosRoutes.js";
 import categoriasRoutes from "./routes/categoriasRoutes.js";
+import favoritosRoutes from "./routes/favoritosRoutes.js";
 import usuariosRoutes from "./routes/usuarioRoutes.js";
 import carritoRoutes from "./routes/carritoRoutes.js";
 import carritoItemsRoutes from "./routes/carritoItemsRoutes.js"
@@ -29,13 +30,15 @@ app.use("/emprendimientos", emprendimientosRoutes);
 //rutas de usuarios
 app.use("/usuarios", usuariosRoutes);
 // ruta de autenticacion
-app.use('/auth', authRoutes)
+app.use("/auth", authRoutes);
 // rutas de carrito
 app.use("/carritos", carritoRoutes);
 // rutas de carritoItem
 app.use("/items", carritoItemsRoutes);
 //rutas de categorias
 app.use("/categorias", categoriasRoutes);
+//rutas de historial
+app.use("/historial", historialRoutes);
 
 //rutas de planes
 app.use("/planes", planesRoutes);
