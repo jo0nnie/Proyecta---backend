@@ -24,6 +24,9 @@ model Usuarios {
   estado          Boolean
   verificado      Boolean           @default(false)
   carritosId      Int?
+  rol             Roles?            @relation(fields: [rolesId], references: [id])
+
+  rolesId Int?
 }
 
 model Carritos {
@@ -34,6 +37,16 @@ model Carritos {
   pago            Pagos[]
 }
 
+// model CarritosItems {
+//   id               Int              @id @default(autoincrement())
+//   carrito          Carritos         @relation(fields: [carritosId], references: [id])
+//   carritosId       Int
+//   plan             Planes           @relation(fields: [planesId], references: [id])
+//   planesId         Int
+//   emprendimiento   Emprendimientos  @relation(fields: [emprendimientoId], references: [id])
+//   emprendimientoId Int
+// }
+
 model CarritosItems {
   id              Int               @id @default(autoincrement())
   emprendimientos Emprendimientos[]
@@ -43,23 +56,34 @@ model CarritosItems {
   planesId        Int
 }
 
+model Boosteos {
+  id               Int             @id @default(autoincrement())
+  emprendimiento   Emprendimientos @relation(fields: [emprendimientoId], references: [id])
+  emprendimientoId Int
+  plan             Planes          @relation(fields: [planId], references: [id])
+  planId           Int
+  fechaInicio      DateTime        @default(now())
+  fechaFin         DateTime
+  activo           Boolean         @default(true)
+}
+
 model Emprendimientos {
-  id              Int            @id @default(autoincrement())
-  nombre          String?        @db.VarChar(255)
-  descripcion     String?        @db.VarChar(255)
-  ubicacion       String?        @db.VarChar(255)
-  contacto        String?        @db.VarChar(255)
-  imagen          String?        @db.VarChar(255)
-  redes           String?        @db.VarChar(255)
-  visibilidad     Int
-  historiales     Historiales[]
-  favoritos       Favoritos[]
-  CarritosItems   CarritosItems? @relation(fields: [carritosItemsId], references: [id])
-  carritosItemsId Int?
-  Usuarios        Usuarios       @relation(fields: [usuariosId], references: [id])
-  usuariosId      Int
-  Categorias      Categorias?    @relation(fields: [categoriasId], references: [id])
-  categoriasId    Int?
+  id            Int             @id @default(autoincrement())
+  nombre        String?         @db.VarChar(255)
+  descripcion   String?         @db.VarChar(255)
+  ubicacion     String?         @db.VarChar(255)
+  contacto      String?         @db.VarChar(255)
+  imagen        String?         @db.VarChar(255)
+  redes         String?         @db.VarChar(255)
+  visibilidad   Int
+  historiales   Historiales[]
+  favoritos     Favoritos[]
+  carritosItems CarritosItems[]
+  Usuarios      Usuarios        @relation(fields: [usuariosId], references: [id])
+  usuariosId    Int
+  Categorias    Categorias?     @relation(fields: [categoriasId], references: [id])
+  categoriasId  Int?
+  Boosteos      Boosteos[]
 }
 
 // model Sucursales {
@@ -83,15 +107,13 @@ model Favoritos {
 }
 
 model Pagos {
-  id           Int         @id @default(autoincrement())
-  usuario      Usuarios    @relation(fields: [usuarioId], references: [id])
-  usuarioId    Int
-  carrito      Carritos    @relation(fields: [carritoId], references: [id])
-  carritoId    Int
-  metodoPago   MetodoPago? @relation(fields: [metodoPagoId], references: [id])
-  metodoPagoId Int?
-  fecha        DateTime    @default(now())
-  monto        Float
+  id        Int      @id @default(autoincrement())
+  usuario   Usuarios @relation(fields: [usuarioId], references: [id])
+  usuarioId Int
+  carrito   Carritos @relation(fields: [carritoId], references: [id])
+  carritoId Int
+  fecha     DateTime @default(now())
+  monto     Float
 }
 
 model MetodoPago {
@@ -130,13 +152,15 @@ model Ubicaciones {
 }
 
 // descripcion???
+//Duracion en entero ya que vamos a tener una funcion para calcular el precio
 model Planes {
   id            Int             @id @default(autoincrement())
   nombre        String
-  descripcion   String
-  duracion      String
+  descripcion   String          @db.Text
+  duracionDias  Int
   precio        Float
   CarritosItems CarritosItems[]
+  Boosteos      Boosteos[]
 }
 
 model Roles {

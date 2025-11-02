@@ -2,8 +2,8 @@ import { CrearPlan, ObtenerPlanes, ObtenerPlanPorId, EliminarPlan, ActualizarPla
 // post: crear planes
 export const crearPlanes = async (req, res) => {
     try {
-        const { nombre, descripcion, duracion, precio } = req.body;
-        const nuevoPlan = await CrearPlan({ nombre, descripcion, duracion, precio });
+        const { nombre, descripcion, duracionDias, precio } = req.body;
+        const nuevoPlan = await CrearPlan({ nombre, descripcion, duracionDias, precio });
         res.status(201).json(nuevoPlan);
     } catch (error) {
         res.status(500).json({ error: 'Error al crear el plan' });
