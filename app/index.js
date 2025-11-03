@@ -4,7 +4,7 @@ import categoriasRoutes from "./routes/categoriasRoutes.js";
 import favoritosRoutes from "./routes/favoritosRoutes.js";
 import usuariosRoutes from "./routes/usuarioRoutes.js";
 import carritoRoutes from "./routes/carritoRoutes.js";
-import carritoItemsRoutes from "./routes/carritoItemsRoutes.js"
+import metodosDePagoRoutes from "./routes/metodosDePagoRoutes.js";
 import authRoutes from './routes/authRoutes.js'
 import pagosRoutes from './routes/pagosRoutes.js'
 import cors from "cors";
@@ -42,8 +42,8 @@ app.use("/carritos", carritoRoutes);
 app.use("/items", carritoItemsRoutes);
 //rutas de categorias
 app.use("/categorias", categoriasRoutes);
-//ruta pagos
-app.use('/pagos', pagosRoutes);
+//ruta de Metodos de pago
+app.use("/metodos-de-pago", metodosDePagoRoutes);
 
 //rutas de planes
 app.use("/planes", planesRoutes);

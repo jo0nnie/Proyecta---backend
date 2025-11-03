@@ -23,6 +23,7 @@ model Usuarios {
   metodosPago     MetodoPago[]
   estado          Boolean
   verificado      Boolean           @default(false)
+  carritosId      Int?
   rol             Roles?            @relation(fields: [rolesId], references: [id])
   rolesId         Int?
 }
@@ -47,8 +48,9 @@ model Carritos {
 
 model CarritosItems {
   id              Int               @id @default(autoincrement())
-  carrito         Carritos          @relation(fields: [carritoId], references: [id])
-  carritoId       Int
+  emprendimientos Emprendimientos[]
+  Carritos        Carritos          @relation(fields: [carritosId], references: [id])
+  carritosId      Int
   planes          Planes            @relation(fields: [planesId], references: [id])
   planesId        Int
   emprendimientos Emprendimientos[]
