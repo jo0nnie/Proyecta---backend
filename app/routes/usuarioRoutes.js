@@ -45,7 +45,7 @@ router.delete("/me", authMiddleware, EliminarUsuarioLogueado);
 //get emprendimientos usuario
 router.get("/emprendimientos", authMiddleware, obtenerEmprendimientoUsuario)
 //rutas para admin
-router.get("/", ListarUsuarios);
+router.get("/",authMiddleware, ListarUsuarios);
 router.get("/:id", authMiddleware, ListarUsuarioPorId);
 router.put("/:id", authMiddleware, EditarUsuario);
 router.delete("/:id", authMiddleware, EliminarUsuario);

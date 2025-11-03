@@ -71,66 +71,61 @@ export const listarTodosLosUsuarios = async () => {
 };
 
 export const listarUsuarioPorId = async (id) => {
-    let usuario = await prisma.usuarios.findUnique({
-        where: { id },
+  let usuario = await prisma.usuarios.findUnique({
+    where: { id },
+    include: {
+      carrito: {
         include: {
-            carrito: {
-                include: {
-                    idCarritosItems: {
-                        include: {
-                            planes: true,
-                            emprendimientos: true,
-                        },
-                    },
-                },
+          idCarritosItems: {
+            include: {
+              planes: true,
+              emprendimientos: true,
             },
-            emprendimiento: {
-                include: {
-                    Categorias: {
-                        select: { id: true, nombre: true },
-                    },
-                },
-            },
+          },
         },
+      },
+      emprendimiento: {
+        include: {
+          Categorias: {
+            select: { id: true, nombre: true },
+          },
+        },
+      },
+    },
+  });
+
+  if (!usuario?.carrito) {
+    await prisma.carritos.create({
+      data: {
+        usuario: {
+          connect: { id },
+        },
+      },
     });
 
-    if (!usuario) {
-        throw new Error("No se encontró el Usuario");
-    }
-
-    if (!usuario.carrito) {
-        const nuevoCarrito = await prisma.carritos.create({
-            data: {
-                usuario: { connect: { id: usuario.id } },
+    usuario = await prisma.usuarios.findUnique({
+      where: { id },
+      include: {
+        carrito: {
+          include: {
+            idCarritosItems: {
+              include: {
+                planes: true,
+                emprendimientos: true,
+              },
             },
-            include: {
-                idCarritosItems: true,
+          },
+        },
+        emprendimiento: {
+          include: {
+            Categorias: {
+              select: { id: true, nombre: true },
             },
-        });
+          },
+        },
+      },
+    });
+  }
 
-        usuario = await prisma.usuarios.findUnique({
-            where: { id },
-            include: {
-                carrito: {
-                    include: {
-                        idCarritosItems: {
-                            include: {
-                                planes: true,
-                                emprendimientos: true,
-                            },
-                        },
-                    },
-                },
-                emprendimiento: {
-                    include: {
-                        Categorias: {
-                            select: { id: true, nombre: true },
-                        },
-                    },
-                },
-            },
-        });
-    }
-
-    return usuario;
+  return usuario; 
 };
