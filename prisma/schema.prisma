@@ -13,26 +13,25 @@ model Usuarios {
   nombre          String?           @db.VarChar(255)
   apellido        String?           @db.VarChar(255)
   contrasena      String?           @db.VarChar(255)
-  email           String            @unique(map: "email") @db.VarChar(255)
+  email           String            @unique @db.VarChar(255)
   fechaNacimiento DateTime
   pagos           Pagos[]
-  carrito         Carritos?
+  carrito         Carritos?         @relation("UsuarioCarrito")
   historial       Historiales?
   favoritos       Favoritos?
   emprendimiento  Emprendimientos[]
   metodosPago     MetodoPago[]
   estado          Boolean
   verificado      Boolean           @default(false)
-  carritosId      Int?
   rol             Roles?            @relation(fields: [rolesId], references: [id])
-  rolesId Int?
+  rolesId         Int?
 }
 
 model Carritos {
   id              Int             @id @default(autoincrement())
   idCarritosItems CarritosItems[]
-  Usuarios        Usuarios        @relation(fields: [usuariosId], references: [id])
-  usuariosId      Int             @unique
+  usuario         Usuarios        @relation("UsuarioCarrito", fields: [usuarioId], references: [id])
+  usuarioId       Int             @unique
   pago            Pagos[]
 }
 
@@ -48,11 +47,11 @@ model Carritos {
 
 model CarritosItems {
   id              Int               @id @default(autoincrement())
-  emprendimientos Emprendimientos[]
-  Carritos        Carritos          @relation(fields: [carritosId], references: [id])
-  carritosId      Int
+  carrito         Carritos          @relation(fields: [carritoId], references: [id])
+  carritoId       Int
   planes          Planes            @relation(fields: [planesId], references: [id])
   planesId        Int
+  emprendimientos Emprendimientos[]
 }
 
 model Boosteos {
@@ -67,22 +66,23 @@ model Boosteos {
 }
 
 model Emprendimientos {
-  id            Int             @id @default(autoincrement())
-  nombre        String?         @db.VarChar(255)
-  descripcion   String?         @db.VarChar(255)
-  ubicacion     String?         @db.VarChar(255)
-  contacto      String?         @db.VarChar(255)
-  imagen        String?         @db.VarChar(255)
-  redes         String?         @db.VarChar(255)
-  visibilidad   Int
-  historiales   Historiales[]
-  favoritos     Favoritos[]
-  carritosItems CarritosItems[]
-  Usuarios      Usuarios        @relation(fields: [usuariosId], references: [id])
-  usuariosId    Int
-  Categorias    Categorias?     @relation(fields: [categoriasId], references: [id])
-  categoriasId  Int?
-  Boosteos      Boosteos[]
+  id              Int            @id @default(autoincrement())
+  nombre          String?        @db.VarChar(255)
+  descripcion     String?        @db.VarChar(255)
+  ubicacion       String?        @db.VarChar(255)
+  contacto        String?        @db.VarChar(255)
+  imagen          String?        @db.VarChar(255)
+  redes           String?        @db.VarChar(255)
+  visibilidad     Int
+  historiales     Historiales[]
+  favoritos       Favoritos[]
+  CarritosItems   CarritosItems? @relation(fields: [carritosItemsId], references: [id])
+  carritosItemsId Int?
+  Usuarios        Usuarios       @relation(fields: [usuariosId], references: [id])
+  usuariosId      Int
+  Categorias      Categorias?    @relation(fields: [categoriasId], references: [id])
+  categoriasId    Int?
+  Boosteos        Boosteos[]
 }
 
 // model Sucursales {
@@ -106,13 +106,15 @@ model Favoritos {
 }
 
 model Pagos {
-  id        Int      @id @default(autoincrement())
-  usuario   Usuarios @relation(fields: [usuarioId], references: [id])
-  usuarioId Int
-  carrito   Carritos @relation(fields: [carritoId], references: [id])
-  carritoId Int
-  fecha     DateTime @default(now())
-  monto     Float
+  id           Int         @id @default(autoincrement())
+  usuario      Usuarios    @relation(fields: [usuarioId], references: [id])
+  usuarioId    Int
+  carrito      Carritos    @relation(fields: [carritoId], references: [id])
+  carritoId    Int
+  metodoPago   MetodoPago? @relation(fields: [metodoPagoId], references: [id])
+  metodoPagoId Int?
+  fecha        DateTime    @default(now())
+  monto        Float
 }
 
 model MetodoPago {
@@ -124,6 +126,7 @@ model MetodoPago {
   tipoTarjeta      String
   vencimiento      DateTime
   cvc              String?
+  pagos            Pagos[]
 }
 
 model Direcciones {
