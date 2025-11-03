@@ -6,7 +6,7 @@ import {
 } from "../services/usuarioService.js";
 import jwt from "jsonwebtoken";
 import { SECRET } from "../constants/constants.js";
-
+import prisma from "../prisma/client.js";
 export const ListarUsuarios = async (req, res) => {
     try {
         const usuario = await listarTodosLosUsuarios();
@@ -32,20 +32,34 @@ export const ListarUsuarioPorId = async (req, res) => {
 }
 
 export const ObtenerUsuarioLogueado = async (req, res) => {
-    try {
-        const auth = req.headers.authorization;
-        if (!auth) return res.status(401).json({ msg: "Token requerido" });
+  try {
+    const usuario = await prisma.usuarios.findUnique({
+      where: { id: req.usuarioId },
+      include: { rol: true },
+    });
 
-        const token = auth.split(" ")[1];
-        const decoded = jwt.verify(token, SECRET);
+    if (!usuario) return res.status(404).json({ error: "Usuario no encontrado" });
 
-        const usuario = await listarUsuarioPorId(decoded.id);
+    const { id, nombre, apellido, email, fechaNacimiento, verificado, rol } = usuario;
 
-        return res.json(usuario);
-    } catch (error) {
-        return res.status(401).json({ msg: "Token inválido o expirado" });
-    }
+    res.json({
+      id,
+      nombre,
+      apellido,
+      email,
+      fechaNacimiento,
+      verificado,
+      rol: rol?.nombre,
+    });
+  } catch (err) {
+    console.error("Error al obtener usuario logueado:", err.message);
+    res.status(500).json({ error: "Error interno al obtener usuario logueado" });
+  }
 };
+
+
+
+
 
 export const EditarUsuario = async (req, res) => {
     try {

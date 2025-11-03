@@ -13,6 +13,8 @@ import planesRoutes from "./routes/planesRoutes.js";
 import rolRoutes from './routes/rolRoutes.js'
 import estadisticasRoutes from './routes/estadisticasRoutes.js'
 import historialRoutes from './routes/historialRoutes.js'
+import carritoItemsRoutes from './routes/carritoItemsRoutes.js'
+
 
 const app = express();
 app.use(
@@ -44,6 +46,9 @@ app.use("/items", carritoItemsRoutes);
 app.use("/categorias", categoriasRoutes);
 //ruta de Metodos de pago
 app.use("/metodos-de-pago", metodosDePagoRoutes);
+//pagos
+app.use("/pagos", pagosRoutes)
+
 
 //rutas de planes
 app.use("/planes", planesRoutes);

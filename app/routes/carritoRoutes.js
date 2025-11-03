@@ -3,10 +3,10 @@ import {
   createCarrito,
   obtenerCarritoPorId,
 } from '../controllers/carritoController.js';
-
+import { authMiddleware } from '../middlewares/authMiddleware.js';
 const router = express.Router();
 
-router.post('/', createCarrito);
-router.get('/:id', obtenerCarritoPorId);
+router.post('/', authMiddleware, createCarrito);
+router.get('/:id',authMiddleware, obtenerCarritoPorId);
 
 export default router;

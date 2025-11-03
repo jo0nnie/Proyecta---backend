@@ -25,6 +25,22 @@ export const crearItem = async (carritosId, planesId, emprendimientosIds) => {
             throw new Error('Uno o más emprendimientos no existen');
         }
     }
+    //para ver si el carrito ya existe
+    const yaExiste = await prisma.carritosItems.findFirst({
+        where: {
+            carritosId,
+            planesId,
+            emprendimientos: {
+                some: {
+                    id: { in: emprendimientosIds }
+                }
+            }
+        }
+    });
+
+    if (yaExiste) {
+        throw new Error("Este ítem ya está en el carrito");
+    }
 
     const nuevoItem = await prisma.carritosItems.create({
         data: {
@@ -43,6 +59,7 @@ export const crearItem = async (carritosId, planesId, emprendimientosIds) => {
     });
 
     return nuevoItem;
+
 };
 
 

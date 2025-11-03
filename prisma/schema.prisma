@@ -47,13 +47,13 @@ model Carritos {
 // }
 
 model CarritosItems {
-  id              Int               @id @default(autoincrement())
-  emprendimientos Emprendimientos[]
-  Carritos        Carritos          @relation(fields: [carritosId], references: [id])
-  carritosId      Int
-  planes          Planes            @relation(fields: [planesId], references: [id])
-  planesId        Int
-  emprendimientos Emprendimientos[]
+  id               Int             @id @default(autoincrement())
+  carrito          Carritos        @relation(fields: [carritosId], references: [id])
+  carritosId       Int
+  plan             Planes          @relation(fields: [planesId], references: [id])
+  planesId         Int
+  emprendimiento   Emprendimientos @relation(fields: [emprendimientoId], references: [id])
+  emprendimientoId Int
 }
 
 model Boosteos {
@@ -68,23 +68,22 @@ model Boosteos {
 }
 
 model Emprendimientos {
-  id              Int            @id @default(autoincrement())
-  nombre          String?        @db.VarChar(255)
-  descripcion     String?        @db.VarChar(255)
-  ubicacion       String?        @db.VarChar(255)
-  contacto        String?        @db.VarChar(255)
-  imagen          String?        @db.VarChar(255)
-  redes           String?        @db.VarChar(255)
-  visibilidad     Int
-  historiales     Historiales[]
-  favoritos       Favoritos[]
-  CarritosItems   CarritosItems? @relation(fields: [carritosItemsId], references: [id])
-  carritosItemsId Int?
-  Usuarios        Usuarios       @relation(fields: [usuariosId], references: [id])
-  usuariosId      Int
-  Categorias      Categorias?    @relation(fields: [categoriasId], references: [id])
-  categoriasId    Int?
-  Boosteos        Boosteos[]
+  id            Int             @id @default(autoincrement())
+  nombre        String?         @db.VarChar(255)
+  descripcion   String?         @db.VarChar(255)
+  ubicacion     String?         @db.VarChar(255)
+  contacto      String?         @db.VarChar(255)
+  imagen        String?         @db.VarChar(255)
+  redes         String?         @db.VarChar(255)
+  visibilidad   Int
+  historiales   Historiales[]
+  favoritos     Favoritos[]
+  Usuarios      Usuarios        @relation(fields: [usuariosId], references: [id])
+  usuariosId    Int
+  Categorias    Categorias?     @relation(fields: [categoriasId], references: [id])
+  categoriasId  Int?
+  boosteos      Boosteos[]
+  carritosItems CarritosItems[] // relación inversa uno-a-muchos
 }
 
 // model Sucursales {
@@ -112,7 +111,7 @@ model Favoritos {
   emprendimiento   Emprendimientos @relation(fields: [emprendimientoId], references: [id])
   emprendimientoId Int
 
-  @@unique([usuarioId, emprendimientoId]) 
+  @@unique([usuarioId, emprendimientoId])
 }
 
 model Pagos {
