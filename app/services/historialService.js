@@ -1,24 +1,38 @@
 import prisma from "../prisma/client.js";
 
 export const listarRecienVistos = async (usuarioId) => {
-  const recientes = await prisma.historiales.findMany({
+  return await prisma.historiales.findMany({
     where: { usuarioId },
-    include: { emprendimientos: { include: { Categorias: true } } },
-    orderBy: {
-      id: "desc",
+    include: {
+      emprendimiento: {
+        include: { Categorias: true },
+      },
     },
+    orderBy: { fecha: "desc" }, 
   });
-
-  return recientes;
 };
 
 export const recienVisto = async (usuarioId, emprendimientoId) => {
-  return await prisma.historiales.create({
-    data: {
-      usuario: { connect: { id: usuarioId } },
-      emprendimientos: { connect: { id: emprendimientoId } },
-    },
-  });
+  try {
+    await prisma.historiales.upsert({
+      where: {
+        usuarioId_emprendimientoId: {
+          usuarioId,
+          emprendimientoId,
+        },
+      },
+      update: {
+        fecha: new Date(),
+      },
+      create: {
+        usuario: { connect: { id: usuarioId } },
+        emprendimiento: { connect: { id: emprendimientoId } },
+      },
+    });
+  } catch (err) {
+    console.error("Error en recienVisto:", err);
+    throw err;
+  }
 };
 
 export const limpiarHistorial = async (usuarioId) => {

@@ -18,13 +18,15 @@ export const EmprendimientoRecienVisto = async (req, res, next) => {
   try {
     const usuarioId = req.usuarioId;
     const { emprendimientoId } = req.body;
+    console.log("Controller recibe:", { usuarioId, emprendimientoId });
     const resultado = await recienVisto(usuarioId, emprendimientoId);
     res.status(200).json(resultado);
   } catch (err) {
+    console.error("Error en controller:", err);
     next(err);
   }
 };
-
+//listo
 export const HistorialLimpio = async (req, res, next) => {
   try {
     const usuarioId = req.usuarioId;

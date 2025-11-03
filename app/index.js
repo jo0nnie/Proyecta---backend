@@ -12,6 +12,7 @@ import fileUpload from "express-fileupload";
 import planesRoutes from "./routes/planesRoutes.js";
 import rolRoutes from './routes/rolRoutes.js'
 import estadisticasRoutes from './routes/estadisticasRoutes.js'
+import historialRoutes from './routes/historialRoutes.js'
 
 const app = express();
 app.use(
@@ -49,7 +50,10 @@ app.use("/planes", planesRoutes);
 
 //ruta de rol
 app.use('/roles', rolRoutes)
-
+//favs
+app.use('/favoritos', favoritosRoutes)
+//hist
+app.use('/historial', historialRoutes)
 //ruta admin dashboard 
 //obtener stats
 app.use("/estadisticas", estadisticasRoutes)
