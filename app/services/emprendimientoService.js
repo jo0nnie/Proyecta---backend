@@ -8,6 +8,7 @@ import prisma from "../prisma/client.js";
  * @param {number} data.categoriaId
  * @param {number} usuarioId - ID del usuario autenticado (extraído del token).
  */
+
 export async function CrearEmprendimiento({ nombre, descripcion, imagen, categoriaId, redes }, usuarioId) {
   //validar campos
   if (!nombre || !descripcion || !categoriaId) {
@@ -62,6 +63,15 @@ export async function EliminarEmprendimiento(id) {
   return eliminado;
 }
 // get todos
+// const emprendimientos = await prisma.emprendimiento.findMany({
+//   where: { visibilidad: 1 },
+//   orderBy: [
+//     { boosteoId: 'desc' }, // boosteados primero
+//     { fechaBoosteo: 'desc' }, // más recientes arriba
+//     { createdAt: 'desc' } // luego por fecha de creación
+//   ],
+//   include: { Categorias: true }
+// });
 
 export async function ObtenerEmprendimientos() {
   const emprendimientos = await prisma.emprendimientos.findMany({
@@ -137,3 +147,24 @@ export async function ActualizarEmprendimiento(id, datos, usuarioId) {
 
   return actualizado;
 }
+
+export const ObtenerEmprendimientosUsuario = async (usuarioId) => {
+  console.log("service:", usuarioId);
+  return await prisma.emprendimientos.findMany({
+    where: { usuariosId: usuarioId }, 
+    select: {
+      id: true,
+      nombre: true,
+      descripcion: true,
+      ubicacion: true,
+      contacto: true,
+      imagen: true,
+      visibilidad: true,
+      Categorias: {
+        select: { nombre: true },
+      },
+    },
+  });
+};
+
+
