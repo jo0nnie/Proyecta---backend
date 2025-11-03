@@ -16,8 +16,9 @@ router.post("/", authMiddleware, crearCarritoItem);
 
 //obtener un item
 router.get("/:id", authMiddleware, obtenerCarritoItemPorId);
+
 //obtener todos
-router.get("/:carritosId", authMiddleware, obtenerItemsDeCarrito);
+router.get("/carrito/:carritosId", authMiddleware, obtenerItemsDeCarrito);
 
 //eliminar item
 router.delete("/:id", authMiddleware, eliminarCarritoItem);
