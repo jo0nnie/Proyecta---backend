@@ -1,5 +1,18 @@
 import prisma from '../prisma/client.js';
 import { crear } from '../services/carritoService.js';
+import { agregarItemAlCarrito } from "../services/carritoService.js";
+//para agregar item al carrito
+export const agregarItem = async (req, res) => {
+  const { usuarioId, emprendimientoId, planId } = req.body;
+
+  try {
+    const resultado = await agregarItemAlCarrito(usuarioId, emprendimientoId, planId);
+    res.status(201).json(resultado);
+  } catch (err) {
+    res.status(400).json({ error: "Error al agregar ítem al carrito", detalle: err.message });
+  }
+};
+
 
 export const createCarrito = async (req, res) => {
   const { usuarioId } = req.body;

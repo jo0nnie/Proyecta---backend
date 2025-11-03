@@ -3,17 +3,25 @@ import {
   obtenerItemsPorCarrito,
   obtenerItemPorId,
   actualizarItem,
-  eliminarItem
+  eliminarItem,
+  obtenerItemsDelCarrito
 } from '../services/carritoItemService.js';
 
 export const crearCarritoItem = async (req, res) => {
   const { carritosId, planesId, emprendimientosIds = [] } = req.body;
 
   try {
-    const nuevoItem = await crearItem(carritosId, planesId, emprendimientosIds);
-    res.status(201).json(nuevoItem);
+    const itemsCreados = await crearItem(carritosId, planesId, emprendimientosIds);
+
+    res.status(201).json({
+      mensaje: `Se agregaron ${itemsCreados.length} ítem(s) al carrito.`,
+      items: itemsCreados
+    });
   } catch (err) {
-    res.status(400).json({ error: 'Error al crear item en carrito', detalle: err.message });
+    res.status(400).json({
+      error: 'Error al crear item en carrito',
+      detalle: err.message
+    });
   }
 };
 
@@ -69,5 +77,25 @@ export const eliminarCarritoItem = async (req, res) => {
       return res.status(404).json({ error: err.message });
     }
     res.status(500).json({ error: 'Error al eliminar item', detalle: err.message });
+  }
+};
+
+// get items
+
+export const getCarritoItems = async (req, res) => {
+  const { carritosId } = req.params;
+
+  try {
+    const items = await obtenerItemsDelCarrito(Number(carritosId));
+
+    res.status(200).json({
+      mensaje: `Carrito ${carritosId} contiene ${items.length} ítem(s).`,
+      items
+    });
+  } catch (err) {
+    res.status(400).json({
+      error: "Error al obtener ítems del carrito",
+      detalle: err.message
+    });
   }
 };

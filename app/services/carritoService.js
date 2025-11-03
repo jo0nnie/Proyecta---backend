@@ -19,3 +19,32 @@ export const crear = async (usuarioId) => {
   });
   return nuevoCarrito;
 };
+
+
+export const agregarItemAlCarrito = async (usuarioId, emprendimientoId, planId) => {
+  return await prisma.$transaction(async (tx) => {
+    const usuario = await tx.usuarios.findUnique({ where: { id: usuarioId } });
+    if (!usuario) throw new Error("Usuario no existe");
+
+    let carrito = await tx.carritos.findUnique({ where: { usuarioId } });
+    if (!carrito) {
+      carrito = await tx.carritos.create({
+        data: { usuario: { connect: { id: usuarioId } } },
+      });
+    }
+
+    const item = await tx.carritosItems.create({
+      data: {
+        carritosId: carrito.id,
+        emprendimientoId,
+        planesId: planId,
+      },
+      include: {
+        plan: true,
+        emprendimiento: true,
+      },
+    });
+
+    return { carrito, item };
+  });
+};

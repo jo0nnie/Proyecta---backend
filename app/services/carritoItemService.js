@@ -2,66 +2,56 @@ import prisma from '../prisma/client.js';
 
 
 export const crearItem = async (carritosId, planesId, emprendimientosIds) => {
+    const carrito = await prisma.carritos.findUnique({ where: { id: carritosId } });
+    if (!carrito) throw new Error("Carrito no encontrado");
 
-    const carrito = await prisma.carritos.findUnique({
-        where: { id: carritosId }
+    const plan = await prisma.planes.findUnique({ where: { id: planesId } });
+    if (!plan) throw new Error("Plan no encontrado");
+
+    const emprendimientosExistentes = await prisma.emprendimientos.findMany({
+        where: { id: { in: emprendimientosIds } }
     });
-    if (!carrito) throw new Error('Carrito no encontrado');
 
+    if (emprendimientosExistentes.length !== emprendimientosIds.length) {
+        throw new Error("Uno o más emprendimientos no existen");
+    }
 
-    const plan = await prisma.planes.findUnique({
-        where: { id: planesId }
-    });
-    if (!plan) throw new Error('Plan no encontrado');
+    const itemsCreados = [];
 
-    if (emprendimientosIds && emprendimientosIds.length > 0) {
-        const emprendimientosExistentes = await prisma.emprendimientos.findMany({
+    for (const id of emprendimientosIds) {
+        const yaExiste = await prisma.carritosItems.findFirst({
             where: {
-                id:
-                    { in: emprendimientosIds }
+                carritosId,
+                planesId,
+                emprendimientos: {
+                    some: { id }
+                }
             }
         });
-        if (emprendimientosExistentes.length !== emprendimientosIds.length) {
-            throw new Error('Uno o más emprendimientos no existen');
+
+        if (!yaExiste) {
+            const nuevoItem = await prisma.carritosItems.create({
+                data: {
+                    carrito: { connect: { id: carritosId } },
+                    plan: { connect: { id: planesId } },
+                    emprendimientos: { connect: [{ id }] }
+                },
+                include: {
+                    plan: true,
+                    emprendimientos: true
+                }
+            });
+
+            itemsCreados.push(nuevoItem);
         }
     }
-    //para ver si el carrito ya existe
-    const yaExiste = await prisma.carritosItems.findFirst({
-        where: {
-            carritosId,
-            planesId,
-            emprendimientos: {
-                some: {
-                    id: { in: emprendimientosIds }
-                }
-            }
-        }
-    });
 
-    if (yaExiste) {
-        throw new Error("Este ítem ya está en el carrito");
+    if (itemsCreados.length === 0) {
+        throw new Error("Todos los ítems ya estaban en el carrito");
     }
 
-    const nuevoItem = await prisma.carritosItems.create({
-        data: {
-            carritosId,
-            planesId,
-            ...(emprendimientosIds && emprendimientosIds.length > 0 && {
-                emprendimientos: {
-                    connect: emprendimientosIds.map(id => ({ id }))
-                }
-            })
-        },
-        include: {
-            planes: true,
-            emprendimientos: true
-        }
-    });
-
-    return nuevoItem;
-
+    return itemsCreados;
 };
-
 
 export const obtenerItemsPorCarrito = async (carritosId) => {
     const items = await prisma.carritosItems.findMany({
@@ -140,4 +130,18 @@ export const eliminarItem = async (id) => {
     await prisma.carritosItems.delete({
         where: { id }
     });
+};
+
+
+// get items
+export const obtenerItemsDelCarrito = async (carritosId) => {
+  const items = await prisma.carritosItems.findMany({
+    where: { carritosId },
+    include: {
+      plan: true,
+      emprendimientos: true
+    }
+  });
+
+  return items;
 };

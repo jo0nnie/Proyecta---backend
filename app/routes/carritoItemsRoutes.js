@@ -5,6 +5,7 @@ import {
   actualizarCarritoItem,
   obtenerCarritoItemPorId,
   obtenerItemsDeCarrito,
+  getCarritoItems
 } from "../controllers/carritoItemController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 
@@ -19,7 +20,7 @@ router.get("/:id", authMiddleware, obtenerCarritoItemPorId);
 
 //obtener todos
 router.get("/carrito/:carritosId", authMiddleware, obtenerItemsDeCarrito);
-
+router.get("/carrito/:carritosId/items", authMiddleware, getCarritoItems);
 //eliminar item
 router.delete("/:id", authMiddleware, eliminarCarritoItem);
 
