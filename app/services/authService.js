@@ -42,7 +42,7 @@ export const RegistrarUsuario = async ({
       rolesId: rolUsuario.id
     },
   });
-//
+  //
   const token = jwt.sign({ id: nuevoUsuario.id, rol: rolUsuario.nombre }, SECRET, { expiresIn: "1d" });
   const url = `${process.env.FRONTEND_URL}/auth/verificar-email?token=${token}`;
   console.log("URL generada para verificación:", url);
@@ -56,7 +56,10 @@ export const RegistrarUsuario = async ({
 export const LoguearUsuario = async ({ email, contrasena }) => {
   const usuario = await prisma.usuarios.findUnique({
     where: { email },
-    include: { rol: true },
+    include: {
+      rol: true,
+      carrito: true,
+    },
   });
   if (!usuario) {
     throw new Error("Usuario no Encontrado");
@@ -75,11 +78,13 @@ export const LoguearUsuario = async ({ email, contrasena }) => {
   });
   return {
     usuario: {
+      id: usuario.id,
       nombre: usuario.nombre,
       apellido: usuario.apellido,
       correo: usuario.email,
       estado: true,
-      rol: usuario.rol.nombre
+      rol: usuario.rol.nombre,
+      carrito: usuario.carrito ? { id: usuario.carrito.id } : null
     },
     token,
   };

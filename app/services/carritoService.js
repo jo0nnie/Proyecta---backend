@@ -9,8 +9,11 @@ export const crear = async (usuarioId) => {
   const carritoExistente = await prisma.carritos.findUnique({
     where: { usuarioId }
   });
-  if (carritoExistente) throw new Error("El usuario ya tiene un carrito");
-
+  if (carritoExistente) {
+    const error = new Error("El usuario ya tiene un carrito");
+    error.carritoId = carritoExistente.id;
+    throw error;
+  }
   const nuevoCarrito = await prisma.carritos.create({
     data: {
       usuario: { connect: { id: usuarioId } }

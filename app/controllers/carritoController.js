@@ -13,14 +13,17 @@ export const agregarItem = async (req, res) => {
   }
 };
 
-
 export const createCarrito = async (req, res) => {
   const { usuarioId } = req.body;
   try {
     const nuevoCarrito = await crear(usuarioId);
     res.status(201).json(nuevoCarrito);
   } catch (err) {
-    res.status(400).json({ error: 'Error al crear carrito', detalle: err.message });
+    res.status(400).json({
+      error: 'Error al crear carrito',
+      detalle: err.message,
+      carritoId: err.carritoId || null
+    });
   }
 };
 
