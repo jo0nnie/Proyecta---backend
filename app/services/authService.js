@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { SECRET } from "../constants/constants.js";
 import prisma from "../prisma/client.js";
 import { enviarCorreoVerificacion } from "../utils/resend/enviarCorreoVerificacion.js";
+
 export const RegistrarUsuario = async ({
   nombre,
   apellido,

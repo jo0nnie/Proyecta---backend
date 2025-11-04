@@ -16,14 +16,14 @@ model Usuarios {
   email           String            @unique @db.VarChar(255)
   fechaNacimiento DateTime
   pagos           Pagos[]
-  carrito         Carritos?         @relation("UsuarioCarrito")
   historial       Historiales[]
   favoritos       Favoritos[]
   emprendimiento  Emprendimientos[]
   metodosPago     MetodoPago[]
   estado          Boolean
   verificado      Boolean           @default(false)
-  carritosId      Int?
+  carrito         Carritos?         @relation("UsuarioCarrito")
+  carritosId      Int?              @unique
   rol             Roles?            @relation(fields: [rolesId], references: [id])
   rolesId         Int?
 }
@@ -42,7 +42,7 @@ model CarritosItems {
   planesId        Int
   carrito         Carritos          @relation(fields: [carritosId], references: [id])
   plan            Planes            @relation(fields: [planesId], references: [id])
-  emprendimientos  Emprendimientos[] @relation("CarritoItemEmprendimientos")
+  emprendimientos Emprendimientos[] @relation("CarritoItemEmprendimientos")
 }
 
 model Boosteos {
@@ -72,7 +72,7 @@ model Emprendimientos {
   Categorias   Categorias?     @relation(fields: [categoriasId], references: [id])
   categoriasId Int?
   boosteos     Boosteos[]
-  carritoItems     CarritosItems[]   @relation("CarritoItemEmprendimientos")
+  carritoItems CarritosItems[] @relation("CarritoItemEmprendimientos")
 }
 
 // model Sucursales {
