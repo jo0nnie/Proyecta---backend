@@ -4,9 +4,10 @@ import {
   eliminarCarritoItem,
   actualizarCarritoItem,
   obtenerCarritoItemPorId,
-  obtenerItemsDeCarrito,
+  // obtenerItemsDelCarrito,
 } from "../controllers/carritoItemController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { getCarritoItems } from "../services/carritoItemService.js";
 
 const router = express.Router();
 
@@ -18,8 +19,9 @@ router.post("/", authMiddleware, crearCarritoItem);
 router.get("/:id", authMiddleware, obtenerCarritoItemPorId);
 
 //obtener todos
-router.get("/carrito/:carritosId", authMiddleware, obtenerItemsDeCarrito);
+// router.get("/carrito/:carritosId", authMiddleware, obtenerItemsDelCarrito);
 
+router.get("/:carritosId/items",  getCarritoItems);
 //eliminar item
 router.delete("/:id", authMiddleware, eliminarCarritoItem);
 

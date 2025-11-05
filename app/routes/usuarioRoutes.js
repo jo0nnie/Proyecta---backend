@@ -37,7 +37,7 @@ router.post('/logout',authMiddleware, logoutUsuario)
 
 //rutas para el usuario
 //get usuario
-router.get("/me", authMiddleware, ObtenerUsuarioLogueado);
+router.get("/me",authMiddleware, ObtenerUsuarioLogueado);
 //put usuario
 router.put("/me", authMiddleware, EditarUsuarioLogueado);
 //delete usuario

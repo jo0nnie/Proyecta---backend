@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import prisma from "../prisma/client.js";
 
 export const authMiddleware = async (req, res, next) => {
-  console.log("Pasó por authMiddleware:", req.method, req.path); 
+  console.log("Pasó por authMiddleware:", req.method, req.path);
   const authHeader = req.headers["authorization"];
 
   if (!authHeader) {
@@ -18,7 +18,6 @@ export const authMiddleware = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, SECRET);
-    console.log(token)
     const usuario = await prisma.usuarios.findUnique({
       where: { id: decoded.id },
     });
