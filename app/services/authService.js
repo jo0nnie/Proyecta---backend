@@ -83,6 +83,7 @@ export const LoguearUsuario = async ({ email, contrasena }) => {
       nombre: usuario.nombre,
       apellido: usuario.apellido,
       correo: usuario.email,
+      fechaNacimiento: usuario.fechaNacimiento,
       estado: true,
       rol: usuario.rol.nombre,
       carrito: usuario.carrito ? { id: usuario.carrito.id } : null

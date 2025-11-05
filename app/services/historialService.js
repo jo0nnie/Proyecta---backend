@@ -1,15 +1,45 @@
 import prisma from "../prisma/client.js";
 
 export const listarRecienVistos = async (usuarioId) => {
-  return await prisma.historiales.findMany({
+  const ahora = new Date();
+
+  const vistos = await prisma.historiales.findMany({
     where: { usuarioId },
     include: {
       emprendimiento: {
-        include: { Categorias: true },
+        include: {
+          Categorias: true,
+          boosteos: {
+            where: {
+              activo: true,
+              fechaFin: { gt: ahora },
+            },
+            select: { fechaFin: true },
+          },
+        },
       },
     },
-    orderBy: { fecha: "desc" }, 
+    orderBy: { fecha: "desc" },
   });
+
+  const conBoostFlag = vistos.map((v) => {
+    const boosteos = v.emprendimiento.boosteos || [];
+    const fechaFin = boosteos[0]?.fechaFin || null;
+    const diasRestantes = fechaFin
+      ? Math.ceil((new Date(fechaFin) - ahora) / (1000 * 60 * 60 * 24))
+      : 0;
+
+    return {
+      ...v,
+      emprendimiento: {
+        ...v.emprendimiento,
+        estaBoosted: boosteos.length > 0,
+        diasBoosteoRestantes: diasRestantes,
+      },
+    };
+  });
+
+  return conBoostFlag;
 };
 
 export const recienVisto = async (usuarioId, emprendimientoId) => {

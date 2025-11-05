@@ -1,5 +1,12 @@
 import prisma from "../prisma/client.js";
 
+
+function parseVencimiento(mmYy) {
+    const [mm, yy] = mmYy.split("/");
+    if (!mm || !yy || mm.length !== 2 || yy.length !== 2) return null;
+    return new Date(`20${yy}-${mm}-01`);
+}
+
 const estaVencida = (fechaVencimiento) => {
     const hoy = new Date();
     const fechaActual = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
@@ -25,84 +32,117 @@ const validarNumeroTarjeta = (numero) => {
 
 const validarCVC = (cvc) => {
     if (typeof cvc !== 'string') throw new Error("El CVC debe ser una cadena");
-    if (!/^\d{4}$/.test(cvc)) throw new Error("El CVC debe tener exactamente 4 dígitos numéricos");
+    if (!/^\d{3}$/.test(cvc)) throw new Error("El CVC debe tener exactamente 3 dígitos numéricos");
     return cvc;
 };
 
 export const crearPago = async (usuarioId, { metodoPagoId, tarjetaTemporal }) => {
+  let numero, vencimiento;
 
-    let numero, vencimiento;
+  if (tarjetaTemporal) {
+    const { numero: num, cvc, vencimiento: ven, nombreDelTitular, tipoTarjeta } = tarjetaTemporal;
 
-    if (tarjetaTemporal) {
-        const { numero: num, cvc, vencimiento: ven, nombreDelTitular, tipoTarjeta } = tarjetaTemporal;
-
-        if (!num || !cvc || !ven || !nombreDelTitular || !tipoTarjeta) {
-            throw new Error("Faltan datos obligatorios en la tarjeta temporal");
-        }
-
-        numero = validarNumeroTarjeta(num);
-        validarCVC(cvc);
-
-        vencimiento = ven instanceof Date ? ven : new Date(ven);
-        if (isNaN(vencimiento.getTime())) {
-            throw new Error("Formato de fecha de vencimiento inválido");
-        }
-    } else {
-        const metodo = await prisma.metodoPago.findFirst({
-            where: { id: metodoPagoId, usuarioId },
-        });
-        if (!metodo) {
-            throw new Error("Método de pago no válido o no autorizado");
-        }
-        numero = metodo.numero;
-        vencimiento = metodo.vencimiento;
+    if (!num || !cvc || !ven || !nombreDelTitular || !tipoTarjeta) {
+      throw new Error("Faltan datos obligatorios en la tarjeta temporal");
     }
 
-    if (estaVencida(vencimiento)) {
-        throw new Error("La tarjeta ha expirado");
-    }
-    if (!verificarFondos(numero)) {
-        throw new Error("La tarjeta no tiene fondos suficientes para realizar el pago");
-    }
+    numero = validarNumeroTarjeta(num);
+    validarCVC(cvc);
 
-    const carrito = await prisma.carritos.findUnique({
-        where: { usuariosId: usuarioId },
-        include: { idCarritosItems: { include: { planes: true } } },
+    vencimiento = ven instanceof Date ? ven : parseVencimiento(ven);
+    if (!vencimiento || isNaN(vencimiento.getTime())) {
+      throw new Error("Formato de fecha de vencimiento inválido");
+    }
+  } else {
+    const metodo = await prisma.metodoPago.findFirst({
+      where: { id: metodoPagoId, usuarioId },
     });
-
-    if (!carrito) {
-        throw new Error("El usuario no tiene un carrito");
+    if (!metodo) {
+      throw new Error("Método de pago no válido o no autorizado");
     }
-    if (carrito.idCarritosItems.length === 0) {
-        throw new Error("El carrito está vacío");
+    numero = metodo.numero;
+    vencimiento = metodo.vencimiento;
+  }
+
+  if (estaVencida(vencimiento)) {
+    throw new Error("La tarjeta ha expirado");
+  }
+  if (!verificarFondos(numero)) {
+    throw new Error("La tarjeta no tiene fondos suficientes para realizar el pago");
+  }
+
+  const carrito = await prisma.carritos.findFirst({
+    where: { usuarioId },
+    include: {
+      idCarritosItems: {
+        include: {
+          plan: true,
+          emprendimientos: true, // ✅ necesario para boostear
+        },
+      },
+    },
+  });
+
+  if (!carrito) {
+    throw new Error("El usuario no tiene un carrito");
+  }
+  if (carrito.idCarritosItems.length === 0) {
+    throw new Error("El carrito está vacío");
+  }
+
+  const montoTotal = carrito.idCarritosItems.reduce(
+    (total, item) => total + (item.plan?.precio || 0),
+    0
+  );
+
+  if (montoTotal <= 0) {
+    throw new Error("El monto total del carrito no es válido");
+  }
+
+  const dataPago = {
+    monto: montoTotal,
+    usuario: { connect: { id: usuarioId } },
+    carrito: { connect: { id: carrito.id } },
+  };
+
+  if (metodoPagoId) {
+    dataPago.metodoPago = { connect: { id: metodoPagoId } };
+  }
+
+  const pagoExistente = await prisma.pagos.findFirst({
+    where: { carritoId: carrito.id },
+    orderBy: { fecha: "desc" },
+  });
+
+  if (pagoExistente && Date.now() - new Date(pagoExistente.fecha).getTime() < 3000) {
+    throw new Error("Ya se procesó un pago recientemente.");
+  }
+
+  const nuevoPago = await prisma.pagos.create({ data: dataPago });
+//boost
+  for (const item of carrito.idCarritosItems) {
+    const fechaInicio = new Date();
+    const fechaFin = new Date();
+    fechaFin.setDate(fechaInicio.getDate() + item.plan.duracionDias);
+
+    for (const emprendimiento of item.emprendimientos) {
+      await prisma.boosteos.create({
+        data: {
+          emprendimientoId: emprendimiento.id,
+          planId: item.plan.id,
+          fechaInicio,
+          fechaFin,
+          activo: true,
+        },
+      });
     }
+  }
 
-    const montoTotal = carrito.idCarritosItems.reduce(
-        (total, item) => total + (item.planes?.precio || 0),
-        0
-    );
+  await prisma.carritosItems.deleteMany({
+    where: { carritosId: carrito.id },
+  });
 
-    if (montoTotal <= 0) {
-        throw new Error("El monto total del carrito no es válido");
-    }
-
-    const dataPago = {
-        monto: montoTotal,
-        usuario: { connect: { id: usuarioId } },
-        carrito: { connect: { id: carrito.id } },
-    };
-
-    if (metodoPagoId) {
-        dataPago.metodoPago = { connect: { id: metodoPagoId } };
-    }
-
-    const nuevoPago = await prisma.pagos.create({ data: dataPago });
-
-    await prisma.carritosItems.deleteMany({
-        where: { carritosId: carrito.id },
-    });
-
-    return nuevoPago;
+  return nuevoPago;
 };
 
 export const listarTodosLosPagos = async (usuarioId) => {

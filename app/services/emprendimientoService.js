@@ -40,7 +40,7 @@ export async function CrearEmprendimiento({ nombre, descripcion, imagen, categor
       },
       Categorias: {
         connect: { id: categoriaId },
-      redes
+        redes
       },
     },
   });
@@ -72,19 +72,47 @@ export async function EliminarEmprendimiento(id) {
 //   ],
 //   include: { Categorias: true }
 // });
-
 export async function ObtenerEmprendimientos() {
+  const ahora = new Date();
+
   const emprendimientos = await prisma.emprendimientos.findMany({
+    where: { visibilidad: 1 },
     include: {
       Categorias: true,
       Usuarios: true,
-    },
-    orderBy: {
-      id: 'desc',
+      boosteos: {
+        where: {
+          activo: true,
+          fechaFin: { gt: ahora },
+        },
+        select: { fechaFin: true },
+      },
     },
   });
 
-  return emprendimientos;
+  const conFlagBoosted = emprendimientos
+    .map((e) => {
+      const fechaFin = e.boosteos[0]?.fechaFin || null;
+      const diasRestantes = fechaFin
+        ? Math.ceil((new Date(fechaFin) - ahora) / (1000 * 60 * 60 * 24))
+        : 0;
+
+      return {
+        ...e,
+        estaBoosted: e.boosteos.length > 0,
+        diasBoosteoRestantes: diasRestantes,
+      };
+    })
+    .sort((a, b) => {
+      // boosteados primero
+      if (a.estaBoosted && !b.estaBoosted) return -1;
+      if (!a.estaBoosted && b.estaBoosted) return 1;
+
+      // si ambos están boosteados, ordenar por días restantes descendente
+      return b.diasBoosteoRestantes - a.diasBoosteoRestantes;
+    });
+
+  return conFlagBoosted;
 }
 // get:id
 
@@ -147,24 +175,43 @@ export async function ActualizarEmprendimiento(id, datos, usuarioId) {
 
   return actualizado;
 }
-
 export const ObtenerEmprendimientosUsuario = async (usuarioId) => {
-  console.log("service:", usuarioId);
-  return await prisma.emprendimientos.findMany({
-    where: { usuariosId: usuarioId }, 
-    select: {
-      id: true,
-      nombre: true,
-      descripcion: true,
-      ubicacion: true,
-      contacto: true,
-      imagen: true,
-      visibilidad: true,
-      Categorias: {
-        select: { nombre: true },
+  const ahora = new Date();
+
+  const emprendimientos = await prisma.emprendimientos.findMany({
+    where: { usuariosId: usuarioId },
+    include: {
+      Categorias: { select: { nombre: true } },
+      boosteos: {
+        where: {
+          activo: true,
+          fechaFin: { gt: ahora },
+        },
+        select: { fechaFin: true },
       },
     },
   });
+
+  const conBoostFlag = emprendimientos.map((e) => {
+    const boosteos = e.boosteos || [];
+    const fechaFin = boosteos[0]?.fechaFin || null;
+    const diasRestantes = fechaFin
+      ? Math.ceil((new Date(fechaFin) - ahora) / (1000 * 60 * 60 * 24))
+      : 0;
+
+    return {
+      id: e.id,
+      nombre: e.nombre,
+      descripcion: e.descripcion,
+      ubicacion: e.ubicacion,
+      contacto: e.contacto,
+      imagen: e.imagen,
+      visibilidad: e.visibilidad,
+      Categorias: e.Categorias,
+      estaBoosted: boosteos.length > 0,
+      diasBoosteoRestantes: diasRestantes,
+    };
+  });
+
+  return conBoostFlag;
 };
-
-

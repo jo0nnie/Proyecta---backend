@@ -39,12 +39,12 @@ export const agregarItemAlCarrito = async (usuarioId, emprendimientoId, planId) 
     const item = await tx.carritosItems.create({
       data: {
         carritosId: carrito.id,
-        emprendimientoId,
         planesId: planId,
+        emprendimientos: { connect: [{ id: emprendimientoId }] },
       },
       include: {
         plan: true,
-        emprendimiento: true,
+        emprendimientos: true,
       },
     });
 
