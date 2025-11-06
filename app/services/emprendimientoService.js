@@ -122,10 +122,18 @@ export async function ObtenerEmprendimientoPorId(id) {
     include: {
       Categorias: true,
       Usuarios: true,
+      boosteos: {
+        where: { activo: true },
+      },
     },
   });
 
-  return emprendimiento;
+  if (!emprendimiento) return null;
+
+  return {
+    ...emprendimiento,
+    boostActivo: emprendimiento.boosteos.length > 0,
+  };
 }
 
 
@@ -213,7 +221,7 @@ export const ObtenerEmprendimientosUsuario = async (usuarioId) => {
         Categorias: e.Categorias,
         estaBoosted: !!boost,
         diasBoosteoRestantes: diasRestantes,
-        seleccionable: !boost, 
+        seleccionable: !boost,
       };
     })
     .sort((a, b) => {
@@ -223,4 +231,23 @@ export const ObtenerEmprendimientosUsuario = async (usuarioId) => {
     });
 
   return conBoostFlag;
+};
+
+export const obtenerEmprendimientosNoBoosteados = async (usuarioId) => {
+  return await prisma.emprendimientos.findMany({
+    where: {
+      usuariosId: usuarioId,
+      boosteos: {
+        none: {
+          activo: true,
+          fechaFin: {
+            gte: new Date(),
+          },
+        },
+      },
+    },
+    include: {
+      Categorias: true,
+    },
+  });
 };

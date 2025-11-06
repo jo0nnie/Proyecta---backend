@@ -5,12 +5,13 @@ import {
   ObtenerEmprendimientoPorId,
   ActualizarEmprendimiento,
   ObtenerEmprendimientosUsuario,
+  obtenerEmprendimientosNoBoosteados
 } from "../services/emprendimientoService.js";
 import { uploadImage } from "../utils/cloudinary.js";
 
 // post: crear emprendimientos
 export const crearEmprendimiento = async (req, res) => {
-  
+
   try {
     const usuarioId = req.usuarioId;
     if (!usuarioId) {
@@ -159,3 +160,19 @@ export const obtenerEmprendimientoUsuario = async (req, res) => {
   }
 };
 
+//get emprendimientos no boosteados para renderizar en el carrito
+
+export const EmprendimientosNoBoosteados = async (req, res) => {
+  try {
+    const usuarioId = req.usuarioId;
+    if (!usuarioId) {
+      return res.status(401).json({ error: "No autorizado" });
+    }
+
+    const emprendimientos = await obtenerEmprendimientosNoBoosteados(usuarioId);
+    return res.json({ emprendimientos });
+  } catch (error) {
+    console.error("Error al obtener emprendimientos no boosteados:", error);
+    return res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
