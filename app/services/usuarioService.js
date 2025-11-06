@@ -127,5 +127,5 @@ export const listarUsuarioPorId = async (id) => {
     });
   }
 
-  return usuario;
+  return usuario; 
 };

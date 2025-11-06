@@ -1,8 +1,7 @@
 import express from 'express';
-
 const router = express.Router();
 import { crearPlanes, obtenerPlanes, obtenerPlanPorId, eliminarPlan, actualizarPlan } from '../controllers/planesController.js';
-
+import { authMiddleware } from '../middlewares/authMiddleware.js';
 // body post:
 // {
 //     "nombre": "Impulso Inicial",
@@ -15,7 +14,7 @@ import { crearPlanes, obtenerPlanes, obtenerPlanPorId, eliminarPlan, actualizarP
 //     "duracion": "Una Semana",
 //     "precio": "100"
 // }
-router.post('/', crearPlanes);
+router.post('/', authMiddleware, crearPlanes);
 // get todos los planes
 router.get('/', obtenerPlanes);
 router.get('/:id', obtenerPlanPorId);

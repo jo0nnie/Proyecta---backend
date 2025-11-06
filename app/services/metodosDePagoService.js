@@ -15,7 +15,7 @@ const validarCVC = (cvc) => {
   if (typeof cvc !== 'string') {
     throw new Error("Este campo debe ser un string");
   }
-  if (!/^\d{4}$/.test(cvc)) {
+  if (!/^\d{3}$/.test(cvc)) {
     throw new Error("El CVC debe contener exactamente 4 dígitos numéricos");
   }
   return cvc;
