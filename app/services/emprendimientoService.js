@@ -187,31 +187,40 @@ export const ObtenerEmprendimientosUsuario = async (usuarioId) => {
           activo: true,
           fechaFin: { gt: ahora },
         },
+        orderBy: { fechaFin: 'desc' },
+        take: 1,
         select: { fechaFin: true },
       },
     },
   });
 
-  const conBoostFlag = emprendimientos.map((e) => {
-    const boosteos = e.boosteos || [];
-    const fechaFin = boosteos[0]?.fechaFin || null;
-    const diasRestantes = fechaFin
-      ? Math.ceil((new Date(fechaFin) - ahora) / (1000 * 60 * 60 * 24))
-      : 0;
+  const conBoostFlag = emprendimientos
+    .map((e) => {
+      const boost = e.boosteos[0];
+      const fechaFin = boost?.fechaFin || null;
+      const diasRestantes = fechaFin
+        ? Math.ceil((new Date(fechaFin) - ahora) / (1000 * 60 * 60 * 24))
+        : 0;
 
-    return {
-      id: e.id,
-      nombre: e.nombre,
-      descripcion: e.descripcion,
-      ubicacion: e.ubicacion,
-      contacto: e.contacto,
-      imagen: e.imagen,
-      visibilidad: e.visibilidad,
-      Categorias: e.Categorias,
-      estaBoosted: boosteos.length > 0,
-      diasBoosteoRestantes: diasRestantes,
-    };
-  });
+      return {
+        id: e.id,
+        nombre: e.nombre,
+        descripcion: e.descripcion,
+        ubicacion: e.ubicacion,
+        contacto: e.contacto,
+        imagen: e.imagen,
+        visibilidad: e.visibilidad,
+        Categorias: e.Categorias,
+        estaBoosted: !!boost,
+        diasBoosteoRestantes: diasRestantes,
+        seleccionable: !boost, 
+      };
+    })
+    .sort((a, b) => {
+      if (a.estaBoosted && !b.estaBoosted) return -1;
+      if (!a.estaBoosted && b.estaBoosted) return 1;
+      return b.diasBoosteoRestantes - a.diasBoosteoRestantes;
+    });
 
   return conBoostFlag;
 };

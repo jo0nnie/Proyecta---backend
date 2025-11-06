@@ -1,10 +1,5 @@
 import prisma from "../app/prisma/client.js";
 
-'Tecnología'   // id 1
-'Arte'         // id 2
-'Moda'         // id 3
-'Gastronomía'  // id 4
-
 async function main() {
   const emprendimientos = [
     {
@@ -17,6 +12,7 @@ async function main() {
       visibilidad: 1,
       Usuarios: { connect: { id: 1 } },
       Categorias: { connect: { id: 4 } },
+      // boosteado: false, 
     },
     {
       nombre: "Showroom Guapas",
@@ -53,7 +49,7 @@ async function main() {
     },
     {
       nombre: "Boo Bakery",
-      descripcion: "Cositas dulces en version saludable",
+      descripcion: "Cositas dulces en versión saludable",
       ubicacion: "Posadas, Misiones",
       contacto: "contactoC@empresa.com",
       imagen: "https://i.imgur.com/MCKoYKL.jpeg",
@@ -64,7 +60,7 @@ async function main() {
     },
     {
       nombre: "Italo Indumentaria",
-      descripcion: "Ropa sin genero. Calidad y diseño a tu alcance",
+      descripcion: "Ropa sin género. Calidad y diseño a tu alcance",
       ubicacion: "Posadas, Misiones",
       contacto: "contactoC@empresa.com",
       imagen: "https://i.imgur.com/pdrnqx8.jpeg",
@@ -78,7 +74,8 @@ async function main() {
       descripcion: "Las mejores decoraciones artesanales para tu hogar",
       ubicacion: "Posadas, Misiones",
       contacto: "contactoC@empresa.com",
-      imagen: "https://m.media-amazon.com/images/I/81KJQX3ZooL._UF894,1000_QL80_.jpg",
+      imagen:
+        "https://m.media-amazon.com/images/I/81KJQX3ZooL._UF894,1000_QL80_.jpg",
       redes: "https://instagram.com/empresaC",
       visibilidad: 1,
       Usuarios: { connect: { id: 1 } },
@@ -92,7 +89,7 @@ async function main() {
 
   const resultados = await Promise.all(creaciones);
 
-  console.log("emprendimiento creada:", resultados);
+  console.log("Emprendimientos creados:", resultados);
 }
 
 main()
